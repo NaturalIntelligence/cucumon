@@ -38,6 +38,23 @@ class FeatureParser{
         this.steps = [];
     }
 
+    /**
+     * 
+     * @param {string} eventName : feature, scenario, step
+     * @param {Function} fn 
+     */
+    on(eventName, fn){
+        if (!eventName || Object.keys(this.events).indexOf(eventName.toLowerCase()) === -1){
+            throw new Error("Supported events are " + Object.keys(this.events) );
+        }else{
+            eventName  = eventName.toLowerCase();
+            if(eventName === "background"){
+                this.clubBackgroundSteps = false;
+            }
+            this.events[eventName].push(fn);
+        }
+    }
+
     parseFile(filePath){
         const inputStream = require('fs').createReadStream(filePath);
 
@@ -101,22 +118,24 @@ class FeatureParser{
         }
         let match = sectionRegex.exec(line);
         if(match){
-            const keyword = match[1];
+            this.processSection();
+            this.keyword = match[1];
             let statement = match[2];
             if(statement) statement = statement.trim();
 
-            if(keyword.length > 10 && (keyword === "Scenario Outline" || keyword == "Scenario Template")){
-                this.scenario(keyword, statement, true);
-            }else if( keyword === "Scenario" || keyword === "Example" ){
-                this.scenario(keyword, statement, false);
-            }else if( keyword === "Scenarios" || keyword === "Examples" ){
-                this.examples(keyword, statement);
-            }else if( keyword === "Background"){
-                this.background(keyword, statement);
-            }else if( keyword === "Rule"){
-                this.rule(keyword, statement);
-            }else if( keyword === "Feature"){
-                this.feature(keyword, statement);
+            if(this.keyword.length > 10 && (this.keyword === "Scenario Outline" || this.keyword == "Scenario Template")){
+                this.scenario(this.keyword, statement, true);
+                this
+            }else if( this.keyword === "Scenario" || this.keyword === "Example" ){
+                this.scenario(this.keyword, statement, false);
+            }else if( this.keyword === "Scenarios" || this.keyword === "Examples" ){
+                this.examples(this.keyword, statement);
+            }else if( this.keyword === "Background"){
+                this.background(this.keyword, statement);
+            }else if( this.keyword === "Rule"){
+                this.rule(this.keyword, statement);
+            }else if( this.keyword === "Feature"){
+                this.feature(this.keyword, statement);
             }else{
                 this.sectionCount--;
                 this.addDescription(line);
@@ -294,7 +313,13 @@ class FeatureParser{
     }
 
     processSection(){
-        this.trigger(this.currentSection.keyword.toLowerCase(),this.currentSection);
+        if(this.keyword){
+            if(this.keyword[0] === "F" || this.keyword[0] === "R" || this.keyword[0] === "B"){
+                this.trigger(this.keyword.toLowerCase(),this.currentSection);
+            }else{
+                this.trigger(this.keyword.toLowerCase(),this.scenarioObj);
+            }
+        }
     }
 
 

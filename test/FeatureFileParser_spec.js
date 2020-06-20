@@ -5,6 +5,11 @@ describe("Feature file Parser", function () {
     
     it("should parse feature file", function() {
         const parser = new FeatureFileParser();
+        let featurePresent = false;
+
+        parser.on("feature", () => {
+            featurePresent = true;
+        })
         const featureContent = `Feature: Overdue tasks
 
         Let users know when tasks are overdue, even when using other
@@ -31,6 +36,7 @@ describe("Feature file Parser", function () {
         `;
    
         parser.parse(featureContent)
+        expect(featurePresent).toBeTruthy();
         //console.log(JSON.stringify(parser.output,null,4));
     });
     
