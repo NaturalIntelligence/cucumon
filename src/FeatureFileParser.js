@@ -186,7 +186,7 @@ class FeatureParser{
         if(this.sectionCount !== 0){
             //when repeated
             //when dont come at first position
-            throw new Error("Unexpected " + keyword + " at linenumber " + this.oldLineNumber);
+            throw new Error("Unexpected " + keyword + " section at linenumber " + this.oldLineNumber);
         }else{
             this.sectionCount = 1;
             this.output = {
@@ -197,8 +197,16 @@ class FeatureParser{
         }
     }
 
+    itShouldComeAfterFeatureSection(keyword){
+        if(this.sectionCount === 0){
+            //when comes before Feature section
+            throw new Error(keyword + " at linenumber " + this.oldLineNumber + " before Feature section");
+        }
+    }
+
     rule(keyword, statement){
-        if(this.sectionCount === 0 || this.tags.length > 0 || (this.output.feature.rules.length > 0 && this.output.feature.rules[0].statement === "__default" )){
+        this.itShouldComeAfterFeatureSection(keyword);
+        if(this.tags.length > 0 || (this.output.feature.rules.length > 0 && this.output.feature.rules[0].statement === "__default" )){
             //when repeated
             //when previous scenarios are not grouped in a rule
             //when comes at first position
@@ -212,7 +220,8 @@ class FeatureParser{
     }
 
     background(keyword, statement){
-        if(this.bgScenario || this.sectionCount === 0 || this.readingScenario || this.tags.length > 0){
+        this.itShouldComeAfterFeatureSection(keyword);
+        if(this.bgScenario || this.readingScenario || this.tags.length > 0){
             //when comes at first position
             //when repeated
             //when come after any scenario (outline)
@@ -232,9 +241,9 @@ class FeatureParser{
     }
 
     scenario(keyword, statement, outline){
-        if(this.steps.length === 0 && ( this.currentSection.keyword[0] !== "f" && this.currentSection.keyword[0] !== "r" && this.currentSection.keyword[0] !== "b")){
-            //when Scenario comes after scenario where old scenario had no step
-            throw new Error("Unexpected " + keyword + " at linenumber " + this.oldLineNumber);
+        this.itShouldComeAfterFeatureSection(keyword);
+        if(this.scenarioObj && this.scenarioObj.steps.length === 0){
+            throw new Error(keyword + " at linenumber " + this.oldLineNumber + " without steps");
         }else{
             this.outline = outline;
             this.beforeScenario(keyword, statement);
@@ -245,8 +254,9 @@ class FeatureParser{
         if(this.output.feature.rules.length === 0){
             const ruleSection = new Rule("__default", -1);
             this.output.feature.rules.push(ruleSection);
+            this.currentSection = ruleSection;
         }
-  this.scenarioCount++;
+        this.scenarioCount++;
         this.steps = [];
         this.stepDataTable = [];
         this.readingScenario = true;
@@ -256,7 +266,7 @@ class FeatureParser{
         const scenario = new Scenario( this.scenarioCount, statement, this.oldLineNumber); 
         scenario.tags = this.tags;
         this.scenarioObj = scenario;
-        this.currentSection.scenarios.push(scenario)
+        this.currentSection.scenarios.push(scenario);
 
         this.tags = []
     }

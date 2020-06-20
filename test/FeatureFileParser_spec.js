@@ -3,18 +3,8 @@ const FeatureFileParser = require('../src/FeatureFileParser');
 describe("Feature file Parser", function () {
 
     
-    it("should skip feature file with no scenario", function() {
+    it("should parse feature file", function() {
         const parser = new FeatureFileParser();
-
-        /* parser.on('feature', function(featureObj){
-            
-        })
-        parser.on('step', function(){
-
-        })
-        parser.on('scenario', function(){
-
-        }) */
         const featureContent = `Feature: Overdue tasks
 
         Let users know when tasks are overdue, even when using other
@@ -41,7 +31,7 @@ describe("Feature file Parser", function () {
         `;
    
         parser.parse(featureContent)
-        console.log(JSON.stringify(parser.output,null,4));
+        //console.log(JSON.stringify(parser.output,null,4));
     });
     
 });
