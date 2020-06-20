@@ -1,0 +1,17 @@
+{
+  "name": "cucumon",
+  "version": "0.0.1",
+  "description": "Cucumber Gherkin Feature file parser with custom additional features",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine test/*spec.js"
+  },
+  "keywords": [
+    "cucumber", "gherkin" , "feature", "parser"
+  ],
+  "author": "Amit Kumar Gupta",
+  "license": "MIT",
+  "devDependencies": {
+    "jasmine": "^3.5.0"
+  }
+}
