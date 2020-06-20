@@ -282,7 +282,7 @@ class FeatureParser{
         this.bgScenario = false;
         this.readingExamples = false;
         
-        const scenario = new Scenario( this.scenarioCount, statement, this.oldLineNumber); 
+        const scenario = new Scenario( this.scenarioCount, keyword.toLowerCase(), statement, this.oldLineNumber); 
         scenario.tags = this.tags;
         this.scenarioObj = scenario;
         this.currentSection.scenarios.push(scenario);
@@ -305,7 +305,7 @@ class FeatureParser{
 
     addDescription(line){
         if(!this.bgScenario)
-            this.currentSection.description += line;
+            this.currentSection.description += "\n" +line;
     }
 
     recordTags(line){
@@ -314,8 +314,10 @@ class FeatureParser{
 
     processSection(){
         if(this.keyword){
-            if(this.keyword[0] === "F" || this.keyword[0] === "R" || this.keyword[0] === "B"){
+            if(this.keyword[0] === "F" || this.keyword[0] === "R"){
                 this.trigger(this.keyword.toLowerCase(),this.currentSection);
+            }else if(this.keyword[0] === "B"){
+                if(!this.options.clubBgSteps) this.trigger(this.keyword.toLowerCase(),this.scenarioObj);
             }else{
                 this.trigger(this.keyword.toLowerCase(),this.scenarioObj);
             }
