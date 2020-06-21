@@ -153,7 +153,11 @@ class FeatureParser{
                     if(this.readingExamples){
                         throw new Error("Unexpected step at linenumber " + this.oldLineNumber);
                     }
-                    this.readingSteps = true;
+                    if(!this.readingSteps){
+                        this.readingSteps = true;
+                        this.processSection("Scenario");
+                        this.keyword = "";
+                    }
                     this.step = new Step(stepMatch[1], stepMatch[2].trim(), this.oldLineNumber, this.scenarioObj.id);
                     
                     if(this.nextLine[0] === "|" || this.nextLine === '"""' ){
@@ -239,6 +243,7 @@ class FeatureParser{
             const ruleSection = new Rule(statement, this.oldLineNumber);
             this.output.feature.rules.push(ruleSection);
             this.currentSection = ruleSection;
+            this.readingSteps = false;
         }
     }
 
@@ -285,7 +290,7 @@ class FeatureParser{
         this.readingScenario = true;
         this.bgScenario = false;
         this.readingExamples = false;
-        
+        this.readingSteps = false;
         const scenario = new Scenario( this.scenarioCount, keyword.toLowerCase(), statement, this.oldLineNumber); 
         scenario.tags = this.tags;
         this.scenarioObj = scenario;
