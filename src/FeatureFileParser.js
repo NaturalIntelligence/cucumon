@@ -4,6 +4,7 @@ const Rule = require("./sections/Rule");
 const Scenario = require("./sections/Scenario");
 const Background = require("./sections/Background");
 const Step = require("./sections/Step");
+
 const stepsRegex = new RegExp("^(Given|When|Then|And|But)\\s+(.*)")
 const sectionRegex = new RegExp("\\s*(.+?):(.*)")
 
@@ -19,7 +20,9 @@ class FeatureParser{
             "scenario" : [], //example
             "example" : [], //example
             "step" : [],
-            "background": []
+            "background": [],
+            "end": [],
+            "error": [],
         }
         //this.clubBackgroundSteps = true;
         this.bgScenario = false; //indicate of current scenario is the bg scenario
@@ -36,6 +39,7 @@ class FeatureParser{
         this.stepCount = 0;
         this.tags = [];
         this.steps = [];
+        this.examplesHeader = [];
     }
 
     /**
@@ -55,19 +59,19 @@ class FeatureParser{
         }
     }
 
-    parseFile(filePath){
-        const inputStream = require('fs').createReadStream(filePath);
-
+    parseFile(inputStream){
         const lineReader = require('readline').createInterface({
-            input: require('fs').createReadStream(filePath)
+            input: inputStream
         });
           
+        const that = this;
         lineReader.on('line', function (line) {
-            this.readLine(line.toString().trim());
+            that.readLine(line.toString().trim());
         });    
 
         inputStream.on('end', function () {
-            this.readLine(this.oldLine)
+            that.readLine(that.oldLine);
+            that.trigger("end");
         });
     }
 
@@ -87,6 +91,7 @@ class FeatureParser{
         }else{
             this.readLine(this.oldLine)
         }
+        this.trigger("end");
     }
 
     /**
@@ -108,7 +113,6 @@ class FeatureParser{
     }
 
     processLine(line){
-        
         
         //const temp = this.description;
         //this.description = "";
@@ -175,12 +179,13 @@ class FeatureParser{
                         throw new Error("Unexpected step at linenumber " + this.oldLineNumber);
                     }
                 }else if(this.readingExamples && line[0] === "|"){
-                    line[0] = line[0].substring(1,line.length - 1);
+                    line = line.substring(1,line.length - 1);
                     if(this.examplesHeader.length === 0){
                         const temp = line.split("|");
                         for(let i = 0; i < temp.length;i++){
                             temp[i] = "<"+temp[i].trim() + ">";
                         }
+                        this.examplesHeader = temp;
                     }else{
                         this.processScenarioOutline(this.examplesHeader, line.split("|"));
                     }
@@ -300,6 +305,7 @@ class FeatureParser{
         }else{
             this.readingExamples = true;
             this.readingSteps = false;
+            this.examplesHeader = [];
         }
     }
 
@@ -319,7 +325,7 @@ class FeatureParser{
             }else if(this.keyword[0] === "B"){
                 if(!this.options.clubBgSteps) this.trigger(this.keyword.toLowerCase(),this.scenarioObj);
             }else{
-                this.trigger(this.keyword.toLowerCase(),this.scenarioObj);
+                this.trigger("scenario",this.scenarioObj);
             }
         }
     }
