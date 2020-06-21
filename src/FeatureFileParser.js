@@ -131,6 +131,7 @@ class FeatureParser{
             }else if( this.keyword === "Scenario" || this.keyword === "Example" ){
                 this.scenario(this.keyword, statement, false);
             }else if( this.keyword === "Scenarios" || this.keyword === "Examples" ){
+                this.keyword = "Scenario";
                 this.examples(this.keyword, statement);
             }else if( this.keyword === "Background"){
                 this.background(this.keyword, statement);
@@ -336,6 +337,7 @@ class FeatureParser{
      * @param {array} dataObj 
      */
     processScenarioOutline(dataObjKeys, dataObj){
+        this.processSection("Scenario");
         for (var i = 0; i < this.bg.steps.length.length; i++){
             let step = Object.assign({}, this.bg.steps[i]);
             step.scenarioId = this.scenarioObj.id;
@@ -352,6 +354,7 @@ class FeatureParser{
             this.scenarioObj.steps.push(step);
             this.trigger("step", step);
         }
+        if(this.nextLine && this.nextLine[0] !== "|") this.keyword = "";
     }
 
 
