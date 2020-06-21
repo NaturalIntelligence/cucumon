@@ -68,7 +68,7 @@ class FeatureParser{
 
         inputStream.on('end', function () {
             that.readLine(that.oldLine);
-            that.trigger("end");
+            that.trigger("end", that.output);
         });
     }
 
@@ -88,7 +88,8 @@ class FeatureParser{
         }else{
             this.readLine(this.oldLine)
         }
-        this.trigger("end");
+        //this.trigger("end");
+        return this.output;
     }
 
     /**
