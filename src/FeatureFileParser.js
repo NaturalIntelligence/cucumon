@@ -49,7 +49,7 @@ class FeatureParser{
      */
     on(eventName, fn){
         if (!eventName || Object.keys(this.events).indexOf(eventName.toLowerCase()) === -1){
-            throw new Error("Supported events are " + Object.keys(this.events) );
+            this.error( new Error("Supported events are " + Object.keys(this.events) ));
         }else{
             eventName  = eventName.toLowerCase();
             this.events[eventName].push(fn);
@@ -57,6 +57,8 @@ class FeatureParser{
     }
 
     parseFile(inputStream){
+        this.stream = true;
+
         const lineReader = require('readline').createInterface({
             input: inputStream
         });
@@ -66,10 +68,23 @@ class FeatureParser{
             that.readLine(line.toString().trim());
         });    
 
+        inputStream.on('error', function (err) {
+            this.error(err);
+        });
+
         inputStream.on('end', function () {
             that.readLine(that.oldLine);
+            that.eofValidation();
             that.trigger("end", that.output);
         });
+    }
+
+    error(err){
+        if(this.stream){
+            this.trigger("error", err)
+        }else{
+            throw err;
+        }
     }
 
     parse(fileContent){
@@ -89,6 +104,7 @@ class FeatureParser{
             this.readLine(this.oldLine)
         }
         //this.trigger("end");
+        this.eofValidation();
         return this.output;
     }
 
@@ -151,7 +167,7 @@ class FeatureParser{
                 let stepMatch = stepsRegex.exec(line);
                 if(stepMatch){
                     if(this.readingExamples){
-                        throw new Error("Unexpected step at linenumber " + this.oldLineNumber);
+                        this.error(new Error("Unexpected step at linenumber " + this.oldLineNumber));
                     }
                     if(!this.readingSteps){
                         this.readingSteps = true;
@@ -179,7 +195,7 @@ class FeatureParser{
                     }else if(this.readingDocString){
                         this.stepDocString += line;
                     }else{//A step with no matching keyword or start
-                        throw new Error("Unexpected step at linenumber " + this.oldLineNumber);
+                        this.error( new Error("Unexpected step at linenumber " + this.oldLineNumber));
                     }
                 }else if(this.readingExamples && line[0] === "|"){
                     line = line.substring(1,line.length - 1);
@@ -198,10 +214,10 @@ class FeatureParser{
                     this.addDescription(line);
                 }else{
                     //This code should not be reachable
-                    throw new Error("Unexpected text at linenumber " + this.oldLineNumber);
+                    this.error( new Error("Unexpected text at linenumber " + this.oldLineNumber));
                 }
             }else if(this.sectionCount === 0){//when some text before Feature: section
-                throw new Error("Unexpected text at linenumber " + this.oldLineNumber);
+                this.error( new Error("Unexpected text at linenumber " + this.oldLineNumber));
             }else{
                 //description
                 this.addDescription(line);
@@ -213,7 +229,7 @@ class FeatureParser{
         if(this.sectionCount !== 0){
             //when repeated
             //when dont come at first position
-            throw new Error("Unexpected " + keyword + " section at linenumber " + this.oldLineNumber);
+            this.error( new Error("Unexpected " + keyword + " section at linenumber " + this.oldLineNumber));
         }else{
             this.sectionCount = 1;
             this.output = {
@@ -227,7 +243,7 @@ class FeatureParser{
     itShouldComeAfterFeatureSection(keyword){
         if(this.sectionCount === 0){
             //when comes before Feature section
-            throw new Error(keyword + " at linenumber " + this.oldLineNumber + " before Feature section");
+            this.error( new Error(keyword + " at linenumber " + this.oldLineNumber + " before Feature section"));
         }
     }
 
@@ -238,7 +254,7 @@ class FeatureParser{
             //when previous scenarios are not grouped in a rule
             //when comes at first position
             //when tags come before
-            throw new Error("Unexpected " + keyword + " at linenumber " + this.oldLineNumber);
+            this.error( new Error("Unexpected " + keyword + " at linenumber " + this.oldLineNumber));
         }else{
             const ruleSection = new Rule(statement, this.oldLineNumber);
             this.output.feature.rules.push(ruleSection);
@@ -254,7 +270,7 @@ class FeatureParser{
             //when repeated
             //when come after any scenario (outline)
             //when tags come before
-            throw new Error("Unexpected " + keyword + " at linenumber " + this.oldLineNumber);
+            this.error( new Error("Unexpected " + keyword + " at linenumber " + this.oldLineNumber));
         }else{
             this.readingScenario = true; //to process steps
             this.bgScenario = true; //to validate steps
@@ -271,7 +287,7 @@ class FeatureParser{
     scenario(keyword, statement, outline){
         this.itShouldComeAfterFeatureSection(keyword);
         if(this.scenarioObj && this.scenarioObj.steps.length === 0){
-            throw new Error(keyword + " at linenumber " + this.oldLineNumber + " without steps");
+            this.error( new Error(keyword + " at linenumber " + this.oldLineNumber + " without steps"));
         }else{
             this.outline = outline;
             this.beforeScenario(keyword, statement);
@@ -305,7 +321,7 @@ class FeatureParser{
             //when not the part of scenario outline/template
             //when come just after scenario starts. No steps in between
             //when it is the part of Background section
-            throw new Error("Unexpected " + keyword + " at linenumber " + this.oldLineNumber);            
+            this.error( new Error("Unexpected " + keyword + " at linenumber " + this.oldLineNumber)); 
         }else{
             this.readingExamples = true;
             this.readingSteps = false;
@@ -343,7 +359,7 @@ class FeatureParser{
      */
     processScenarioOutline(dataObjKeys, dataObj){
         this.processSection("Scenario");
-        for (var i = 0; i < this.bg.steps.length.length; i++){
+        for (var i = 0; i < this.bg.steps.length; i++){
             let step = Object.assign({}, this.bg.steps[i]);
             step.scenarioId = this.scenarioObj.id;
             this.scenarioObj.steps.push(step);
@@ -359,14 +375,15 @@ class FeatureParser{
             this.scenarioObj.steps.push(step);
             this.trigger("step", step);
         }
-        if(this.nextLine && this.nextLine[0] !== "|") this.keyword = "";
+        //last section should not be processed
+        if(this.nextLine && this.nextLine[0] !== "|") this.outline = false;
     }
 
 
     processCurrentStep(hasArguments){
         if(hasArguments){
             if(this.stepDocString.length > 0 && this.stepDataTable.length > 0) {
-                throw new Error("Only data table or doc string is allowed for step at line number " + this.stel.lineNumber);
+                this.error( new Error("Only data table or doc string is allowed for step at line number " + this.stel.lineNumber));
             }else if(this.stepDocString.length > 0){
                 this.step.argument = this.stepDocString;
             }else{
@@ -395,5 +412,10 @@ class FeatureParser{
         }
     }
     
+    eofValidation(){
+        if(this.outline){
+            this.error( new Error( "Scenario Outline/Template without Examples at the end of the file"));
+        }
+    }
 }
 module.exports = FeatureParser;
