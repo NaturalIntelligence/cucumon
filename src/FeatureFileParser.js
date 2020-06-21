@@ -52,9 +52,6 @@ class FeatureParser{
             throw new Error("Supported events are " + Object.keys(this.events) );
         }else{
             eventName  = eventName.toLowerCase();
-            if(eventName === "background"){
-                this.clubBackgroundSteps = false;
-            }
             this.events[eventName].push(fn);
         }
     }
@@ -128,8 +125,8 @@ class FeatureParser{
             if(statement) statement = statement.trim();
 
             if(this.keyword.length > 10 && (this.keyword === "Scenario Outline" || this.keyword == "Scenario Template")){
+                this.keyword = "Scenario";
                 this.scenario(this.keyword, statement, true);
-                this
             }else if( this.keyword === "Scenario" || this.keyword === "Example" ){
                 this.scenario(this.keyword, statement, false);
             }else if( this.keyword === "Scenarios" || this.keyword === "Examples" ){
@@ -324,8 +321,9 @@ class FeatureParser{
                 this.trigger(this.keyword.toLowerCase(),this.currentSection);
             }else if(this.keyword[0] === "B"){
                 if(!this.options.clubBgSteps) this.trigger(this.keyword.toLowerCase(),this.scenarioObj);
+            }else if( this.keyword[this.keyword.length - 1] === "s"){//skip Examples and Scenarios
             }else{
-                this.trigger("scenario",this.scenarioObj);
+                this.trigger(this.keyword.toLowerCase(), this.scenarioObj);
             }
         }
     }
