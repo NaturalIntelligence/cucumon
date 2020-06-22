@@ -22,7 +22,7 @@ describe("Background", function () {
 
         parser.on("end", (result) => {
             expect(result.feature.background.steps[0].statement).toBe("a string tokenizer");
-            expect(stepWords).toEqual(["Given", "When", "Then", "When", "Then"]);
+            expect(stepWords).toEqual(["Given", "When", "Then", "When", "Then", "When", "Then"]);
             done();
         });
 
@@ -52,7 +52,7 @@ describe("Background", function () {
 
         parser.on("end", (result) => {
             expect(result.feature.background).toBeNull();
-            expect(stepWords).toEqual(["Given", "When", "Then", "When", "Then"]);
+            expect(stepWords).toEqual(["Given", "When", "Then", "Given", "When", "Then", "Given", "When", "Then"]);
             done();
         });
 

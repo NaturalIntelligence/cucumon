@@ -15,6 +15,6 @@ with description
         | a,b,c     | ,                |
         | abc       |                 |
 
-    Scenario: breaks string for " "
+    Scenario Outline: breaks string for " "
         When I pass "a b c" and " "
         Then I get `["a","b","c"]`
