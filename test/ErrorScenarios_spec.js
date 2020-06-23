@@ -19,7 +19,7 @@ describe("Error in ", function () {
     
             expect( () => {
                 parser.parse(featureContent)
-            }).toThrowError("Example at linenumber 4 without steps")
+            }).toThrowError("example at linenumber 2 without steps")
             //console.log(JSON.stringify(parser.output,null,4));
         });
 
@@ -111,5 +111,46 @@ describe("Error in ", function () {
             //console.log(JSON.stringify(parser.output,null,4));
         });
     
+    });
+
+    describe("Background", function () {
+
+        it("should throw error when scenario before feature section", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `Feature: Overdue tasks
+            
+            Background: without steps
+
+            Example: Already used today
+                Given I last used the app earlier today
+                When I use the app
+                Then I am not notified about overdue tasks
+            `;
+
+            expect( () => {
+                parser.parse(featureContent)
+            }).toThrowError("background at linenumber 3 without steps")
+            //console.log(JSON.stringify(parser.output,null,4));
+        });
+        
+        it("should throw error when scenario before feature section", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `Feature: Overdue tasks
+            
+            Background: without steps
+
+            Rule: sample rule
+
+                Example: Already used today
+                    Given I last used the app earlier today
+                    When I use the app
+                    Then I am not notified about overdue tasks
+            `;
+
+            expect( () => {
+                parser.parse(featureContent)
+            }).toThrowError("background at linenumber 3 without steps")
+            //console.log(JSON.stringify(parser.output,null,4));
+        });
     });
 });

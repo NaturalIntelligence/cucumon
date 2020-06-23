@@ -298,7 +298,7 @@ class FeatureParser{
     scenario(keyword, statement, outline){
         this.itShouldComeAfterFeatureSection(keyword);
         if(this.scenarioObj && this.scenarioObj.steps.length === 0){
-            throw  new Error(keyword + " at linenumber " + this.oldLineNumber + " without steps")
+            throw  new Error(this.scenarioObj.keyword + " at linenumber " + this.scenarioObj.lineNumber + " without steps")
         }else{
             this.outline = outline;
             this.beforeScenario(keyword, statement);
