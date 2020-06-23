@@ -333,7 +333,7 @@ class FeatureParser{
             //when not the part of scenario outline/template
             //when come just after scenario starts. No steps in between
             //when it is the part of Background section
-            throw  new Error("Unexpected " + keyword + " at linenumber " + this.oldLineNumber) 
+            throw  new Error("Unexpected Examples section at linenumber " + this.oldLineNumber) 
         }else{
             this.readingExamples = true;
             this.readingSteps = false;

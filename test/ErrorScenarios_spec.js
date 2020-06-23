@@ -86,6 +86,28 @@ describe("Error in ", function () {
             }).toThrowError("Scenario Outline at linenumber 3 without steps")
 
         });
+
+        it("should throw error when scenario outline without steps and examples", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `Feature: Overdue tasks
+
+                Scenario Outline: breaks string for " "
+
+                    Examples:
+                    | heading |
+                    | data      |
+
+                Example: Already used today
+                    Given I last used the app earlier today
+                    When I use the app
+                    Then I am not notified about overdue tasks
+            `;
+    
+            expect( () => {
+                parser.parse(featureContent)
+            }).toThrowError("Unexpected Examples section at linenumber 5")
+
+        });
     });
 
 
