@@ -449,7 +449,9 @@ class FeatureParser{
     }
     
     eofValidation(){
-        if(this.outline){
+        if(this.scenarioCount === 0){
+            throw  new Error( "No Scenario/Example found");
+        }else if(this.outline){
             throw  new Error( "Scenario Outline/Template without Examples at the end of the file")
         }
     }

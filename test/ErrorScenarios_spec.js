@@ -188,5 +188,21 @@ describe("Error in ", function () {
             }).toThrowError("Background at linenumber 3 without steps")
             //console.log(JSON.stringify(parser.output,null,4));
         });
+        
+        it("should throw error when scenario before feature section", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `Feature: Overdue tasks
+            
+            Background: without steps
+
+            Rule: sample rule
+
+            `;
+
+            expect( () => {
+                parser.parse(featureContent)
+            }).toThrowError("No Scenario/Example found")
+            //console.log(JSON.stringify(parser.output,null,4));
+        });
     });
 });
