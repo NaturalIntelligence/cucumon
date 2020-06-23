@@ -146,23 +146,24 @@ class FeatureParser{
         let match = sectionRegex.exec(line);
         if(match){
             this.processSection();
-            this.keyword = match[1];
+            const keyword = match[1];
             let statement = match[2];
             if(statement) statement = statement.trim();
+            this.keyword = keyword;
 
-            if(this.keyword.length > 10 && (this.keyword === "Scenario Outline" || this.keyword == "Scenario Template")){
+            if(keyword.length > 10 && (keyword === "Scenario Outline" || keyword == "Scenario Template")){
                 this.keyword = "Scenario";
-                this.scenario(this.keyword, statement, true);
-            }else if( this.keyword === "Scenario" || this.keyword === "Example" ){
-                this.scenario(this.keyword, statement, false);
-            }else if( this.keyword === "Scenarios" || this.keyword === "Examples" ){
+                this.scenario(this.keyword, statement, keyword, true);
+            }else if( keyword === "Scenario" || keyword === "Example" ){
+                this.scenario(this.keyword, statement, keyword, false);
+            }else if( keyword === "Scenarios" || keyword === "Examples" ){
                 this.keyword = "Scenario"; // To trigger `scenario` event for each row of Examples
                 this.examples(this.keyword, statement);
-            }else if( this.keyword === "Background"){
+            }else if( keyword === "Background"){
                 this.background(this.keyword, statement);
-            }else if( this.keyword === "Rule"){
+            }else if( keyword === "Rule"){
                 this.rule(this.keyword, statement);
-            }else if( this.keyword === "Feature"){
+            }else if( keyword === "Feature"){
                 this.feature(this.keyword, statement);
             }else{
                 this.sectionCount--;
@@ -295,17 +296,17 @@ class FeatureParser{
         }
     }
 
-    scenario(keyword, statement, outline){
+    scenario(keyword, statement, secionName, outline){
         this.itShouldComeAfterFeatureSection(keyword);
         if(this.scenarioObj && this.scenarioObj.steps.length === 0){
-            throw  new Error(this.scenarioObj.keyword + " at linenumber " + this.scenarioObj.lineNumber + " without steps")
+            throw  new Error(this.scenarioObj.secionName + " at linenumber " + this.scenarioObj.lineNumber + " without steps")
         }else{
             this.outline = outline;
-            this.beforeScenario(keyword, statement);
+            this.beforeScenario(keyword, statement, secionName);
         }
     }
 
-    beforeScenario(keyword, statement){
+    beforeScenario(keyword, statement, secionName){
         if(this.output.feature.rules.length === 0){
             const ruleSection = new Rule("__default", -1);
             this.output.feature.rules.push(ruleSection);
@@ -318,7 +319,7 @@ class FeatureParser{
         this.bgScenario = false;
         this.readingExamples = false;
         this.readingSteps = false;
-        const scenario = new Scenario( this.scenarioCount, keyword.toLowerCase(), statement, this.oldLineNumber); 
+        const scenario = new Scenario( this.scenarioCount, keyword.toLowerCase(), secionName, statement, this.oldLineNumber); 
         scenario.tags = this.tags;
         this.scenarioObj = scenario;
         this.currentSection.scenarios.push(scenario);
