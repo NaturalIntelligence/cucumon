@@ -1,3 +1,5 @@
+const TagExpParser = require("bexp");
+
 const util = require("./util.js");
 const Feature = require("./sections/Feature");
 const Rule = require("./sections/Rule");
@@ -13,7 +15,7 @@ const sectionRegex = new RegExp("\\s*(.+?):(.*)")
 class FeatureParser{
 
     constructor(options){
-        this.options = options || {};
+        this.options = Object.assign( {tagExpression: "" }, options );
         this.events = {
             "feature" : [],
             "rule" : [],
@@ -25,9 +27,7 @@ class FeatureParser{
             "error": [],
         }
         //this.clubBackgroundSteps = true;
-        /**
-         * Requires to trigger event for a section once it is completed.
-         */
+        this.tagExpParser = new TagExpParser(this.options.tagExpression);
         this.keyword = "";
         this.bgScenario = false; //indicate of current scenario is the bg scenario
         this.bg = new Background();
@@ -44,6 +44,7 @@ class FeatureParser{
         this.examplesHeader = [];
         this.stepDataTable = [];
         this.stepDocString = "";
+        this.skip = "";
     }
 
     /**
@@ -68,21 +69,7 @@ class FeatureParser{
         });
           
         const that = this;
-        lineReader.on('line', function (line) {
-            try{
-                that.readLine(line.toString().trim());
-            }catch(e){
-                this.trigger("error", e)
-                lineReader.off('line');
-                inputStream.off('end');
-            }
-        });    
-
-        inputStream.on('error', function (err) {
-            throw err
-        });
-
-        inputStream.on('end', function () {
+        const eofListner = function () {
             try{
                 that.readLine(that.oldLine);
                 that.eofValidation();
@@ -90,12 +77,33 @@ class FeatureParser{
             }catch(e){
                 that.trigger("error", e)
             }
-            
+        }
+
+        const onLineRead =  function (line) {
+            try{
+                that.readLine(line.toString().trim());
+            }catch(e){
+                that.trigger("error", e)
+                //Unregister Events
+                lineReader.removeAllListeners("line");
+                lineReader.close();
+                inputStream.off("end", eofListner);
+                inputStream.close();
+            }
+        };
+
+        lineReader.on('line',onLineRead);    
+
+        inputStream.on('error', function (err) {
+            throw err
         });
+
+        inputStream.on('end', eofListner);
     }
 
 
     parse(fileContent){
+        if(typeof fileContent !== 'string') throw new Error('Incompatible input type. String is expected.');
         let line = "";
         for(let i=0; i<fileContent.length; i++){
             if(fileContent[i] === "\n"){
@@ -108,6 +116,7 @@ class FeatureParser{
         line = line.trim();
         if(line){
             this.readLine(line.trim());
+            this.readLine(this.oldLine);
         }else{
             this.readLine(this.oldLine)
         }
@@ -127,7 +136,22 @@ class FeatureParser{
                 this.oldLine = line;
             }else{
                 this.nextLine = line;
-                this.processLine(this.oldLine);
+
+                if( this.oldLine.indexOf("@") === 0){
+                    this.recordTags(this.oldLine);
+                }else{
+                    this.sectionMatch = sectionRegex.exec(this.oldLine);
+    
+                    //Skip if tag doesn't match
+                    if(this.sectionMatch && this.skip){//start of a section
+                        this.skip = "";
+                        this.processLine(this.oldLine);
+                    }else if(this.skip){ //skip current line to be processed
+                    }else {
+                        this.processLine(this.oldLine);
+                    }
+                }
+
                 this.oldLine = line;
             }
             this.oldLineNumber = this.lineNumber;
@@ -143,11 +167,12 @@ class FeatureParser{
             this.processStepArgument();
             this.processCurrentStep();
         }
-        let match = sectionRegex.exec(line);
-        if(match){
+        
+        if(this.sectionMatch){
             this.processSection();
-            const keyword = match[1];
-            let statement = match[2];
+            const keyword = this.sectionMatch[1];
+            let statement = this.sectionMatch[2];
+            this.sectionMatch = null;//reset
             if(statement) statement = statement.trim();
             this.keyword = keyword;
 
@@ -170,70 +195,66 @@ class FeatureParser{
                 this.addDescription(line);
             }
             this.sectionCount++;
-        }else{
-            if( line.indexOf("@") === 0){
-                this.recordTags(line);
-            }else if(this.readingScenario){
-                let stepMatch = stepsRegex.exec(line);
-                if(stepMatch){
-                    if(this.readingExamples){
-                        throw new Error("Unexpected step at linenumber " + this.oldLineNumber)
-                    }
-                    if(!this.readingSteps && !this.outline) {
-                        this.processSection();//to trigger scenario/background event
-                        this.processBgSteps();
-                    }
-                    this.keyword = ""; //Not to trigger section event again for each step
-                    this.readingSteps = true;
-                    this.step = new Step(stepMatch[1], stepMatch[2].trim(), this.oldLineNumber, this.scenarioObj.id);
-                    
-                    if(this.nextLine[0] === "|" || this.nextLine === '"""' ){
-                        //hold
-                    }else{
-                        this.processCurrentStep();
-                    }
-                }else if(this.readingSteps){
-                    if(line[0] === "|"){//data table
-                        this.readingDataTable = true;
-                        this.stepDataTable.push( util.splitOn(line, "|"));
-                    }else if(line === '"""' ){//docStrng
-                        if(this.readingDocString){
-                            this.processStepArgument();
-                            this.processCurrentStep();
-                            this.readingDocString = false;
-                        }else{
-                            this.readingDocString = true
-                        }
-                    }else if(this.readingDocString){
-                        this.stepDocString += line;
-                    }else{//A step with no matching keyword or start
-                        throw  new Error("Unexpected step at linenumber " + this.oldLineNumber)
-                    }
-                }else if(this.readingExamples && line[0] === "|"){
-                    line = line.substring(1,line.length - 1);
-                    if(this.examplesHeader.length === 0){
-                        const temp = line.split("|");
-                        for(let i = 0; i < temp.length;i++){
-                            temp[i] = "<"+temp[i].trim() + ">";
-                        }
-                        this.examplesHeader = temp;
-                    }else{
-                        this.processScenarioOutline(this.examplesHeader, line.split("|"));
-                    }
-                }else if(this.steps.length === 0){
-                    //description
-                    //incomplete step "Given ", "Given"
-                    this.addDescription(line);
-                }else{
-                    //This code should not be reachable
-                    throw  new Error("Unexpected text at linenumber " + this.oldLineNumber)
+        }else if(this.readingScenario){
+            let stepMatch = stepsRegex.exec(line);
+            if(stepMatch){
+                if(this.readingExamples){
+                    throw new Error("Unexpected step at linenumber " + this.oldLineNumber)
                 }
-            }else if(this.sectionCount === 0){//when some text before Feature: section
-                throw  new Error("Unexpected text at linenumber " + this.oldLineNumber)
-            }else{
+                if(!this.readingSteps && !this.outline) {
+                    this.processSection();//to trigger scenario/background event
+                    this.processBgSteps();
+                }
+                this.keyword = ""; //Not to trigger section event again for each step
+                this.readingSteps = true;
+                this.step = new Step(stepMatch[1], stepMatch[2].trim(), this.oldLineNumber, this.scenarioObj.id);
+                
+                if(this.nextLine[0] === "|" || this.nextLine === '"""' ){
+                    //hold
+                }else{
+                    this.processCurrentStep();
+                }
+            }else if(this.readingSteps){
+                if(line[0] === "|"){//data table
+                    this.readingDataTable = true;
+                    this.stepDataTable.push( util.splitOn(line, "|"));
+                }else if(line === '"""' ){//docStrng
+                    if(this.readingDocString){
+                        this.processStepArgument();
+                        this.processCurrentStep();
+                        this.readingDocString = false;
+                    }else{
+                        this.readingDocString = true
+                    }
+                }else if(this.readingDocString){
+                    this.stepDocString += line;
+                }else{//A step with no matching keyword or start
+                    throw  new Error("Unexpected step at linenumber " + this.oldLineNumber)
+                }
+            }else if(this.readingExamples && line[0] === "|"){
+                line = line.substring(1,line.length - 1);
+                if(this.examplesHeader.length === 0){
+                    const temp = line.split("|");
+                    for(let i = 0; i < temp.length;i++){
+                        temp[i] = "<"+temp[i].trim() + ">";
+                    }
+                    this.examplesHeader = temp;
+                }else{
+                    this.processScenarioOutline(this.examplesHeader, line.split("|"));
+                }
+            }else if(this.steps.length === 0){
                 //description
+                //incomplete step "Given ", "Given"
                 this.addDescription(line);
+            }else{
+                //This code should not be reachable
+                throw  new Error("Unexpected text at linenumber " + this.oldLineNumber)
             }
+        }else if(this.sectionCount === 0){//when some text before Feature: section
+            throw  new Error("Unexpected text at linenumber " + this.oldLineNumber)
+        }else{
+            //description
+            this.addDescription(line);
         }
     }
 
@@ -249,6 +270,7 @@ class FeatureParser{
             }
             this.currentSection = this.output.feature;
             this.currentSection.tags = this.tags;
+            this.tags = []; //reset
         }
     }
 
@@ -296,35 +318,48 @@ class FeatureParser{
         }
     }
 
-    scenario(keyword, statement, secionName, outline){
+    scenario(keyword, statement, secionName, outlineFlag){
         this.itShouldComeAfterFeatureSection(keyword);
         if(this.scenarioObj && this.scenarioObj.steps.length === 0){
             throw  new Error(this.scenarioObj.secionName + " at linenumber " + this.scenarioObj.lineNumber + " without steps")
         }else{
-            this.outline = outline;
+            this.outline = outlineFlag;
             this.beforeScenario(keyword, statement, secionName);
         }
     }
 
-    beforeScenario(keyword, statement, secionName){
-        if(this.output.feature.rules.length === 0){
-            const ruleSection = new Rule("__default", -1);
-            this.output.feature.rules.push(ruleSection);
-            this.currentSection = ruleSection;
+    shouldSkip(){
+        if(!this.tagExpParser.test( this.output.feature.tags.concat( this.tags))){
+            this.skip = "current";
+            return true;
         }
-        this.scenarioCount++;
+    }
+
+    beforeScenario(keyword, statement, secionName){
         this.steps = [];
         this.stepDataTable = [];
         this.readingScenario = true;
         this.bgScenario = false;
         this.readingExamples = false;
         this.readingSteps = false;
-        const scenario = new Scenario( this.scenarioCount, keyword.toLowerCase(), secionName, statement, this.oldLineNumber); 
-        scenario.tags = this.tags;
-        this.scenarioObj = scenario;
-        this.currentSection.scenarios.push(scenario);
+        if(this.shouldSkip()){
+            this.keyword = "";
+            this.tags = []
+            return;
+        }else{
+            this.scenarioCount++;
+            const scenario = new Scenario( this.scenarioCount, keyword.toLowerCase(), secionName, statement, this.oldLineNumber); 
+            scenario.tags = this.tags;
+            this.scenarioObj = scenario;
+            this.tags = [];
+            if(this.output.feature.rules.length === 0){
+                const ruleSection = new Rule("__default", -1);
+                this.output.feature.rules.push(ruleSection);
+                this.currentSection = ruleSection;
+            }
+            this.currentSection.scenarios.push(scenario);
+        }
 
-        this.tags = []
     }
 
     examples(keyword){
@@ -347,7 +382,7 @@ class FeatureParser{
     }
 
     recordTags(line){
-        this.tags = line.split(/\s+/);
+        this.tags = this.tags.concat(line.split(/\s+/));
     }
 
     /**
@@ -449,7 +484,7 @@ class FeatureParser{
     }
     
     eofValidation(){
-        if(this.scenarioCount === 0){
+        if(this.scenarioCount === 0 && this.skip === ""){ // when no scenarios are found not when they are skipped due to tag expression
             throw  new Error( "No Scenario/Example found");
         }else if(this.outline){
             throw  new Error( "Scenario Outline/Template without Examples at the end of the file")
