@@ -7,11 +7,17 @@
     "test": "jasmine test/*spec.js"
   },
   "keywords": [
-    "cucumber", "gherkin" , "feature", "parser"
+    "cucumber",
+    "gherkin",
+    "feature",
+    "parser"
   ],
   "author": "Amit Kumar Gupta",
   "license": "MIT",
   "devDependencies": {
     "jasmine": "^3.5.0"
+  },
+  "dependencies": {
+    "bexp": "^1.0.1"
   }
 }
