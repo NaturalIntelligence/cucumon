@@ -16,6 +16,10 @@ class FeatureParser{
 
     constructor(options){
         this.options = Object.assign( {tagExpression: "" }, options );
+        this._resetParameters();
+    }
+
+    _resetParameters(){
         this.events = {
             "feature" : [],
             "rule" : [],
@@ -62,8 +66,6 @@ class FeatureParser{
     }
 
     parseFile(inputStream){
-        this.stream = true;
-
         const lineReader = require('readline').createInterface({
             input: inputStream
         });
@@ -169,32 +171,7 @@ class FeatureParser{
         }
         
         if(this.sectionMatch){
-            this.processSection();
-            const keyword = this.sectionMatch[1];
-            let statement = this.sectionMatch[2];
-            this.sectionMatch = null;//reset
-            if(statement) statement = statement.trim();
-            this.keyword = keyword;
-
-            if(keyword.length > 10 && (keyword === "Scenario Outline" || keyword == "Scenario Template")){
-                this.keyword = "Scenario";
-                this.scenario(this.keyword, statement, keyword, true);
-            }else if( keyword === "Scenario" || keyword === "Example" ){
-                this.scenario(this.keyword, statement, keyword, false);
-            }else if( keyword === "Scenarios" || keyword === "Examples" ){
-                this.keyword = "Scenario"; // To trigger `scenario` event for each row of Examples
-                this.examples(this.keyword, statement);
-            }else if( keyword === "Background"){
-                this.background(this.keyword, statement);
-            }else if( keyword === "Rule"){
-                this.rule(this.keyword, statement);
-            }else if( keyword === "Feature"){
-                this.feature(this.keyword, statement);
-            }else{
-                this.sectionCount--;
-                this.addDescription(line);
-            }
-            this.sectionCount++;
+            this.markSectionBegining();
         }else if(this.readingScenario){
             let stepMatch = stepsRegex.exec(line);
             if(stepMatch){
@@ -202,7 +179,7 @@ class FeatureParser{
                     throw new Error("Unexpected step at linenumber " + this.oldLineNumber)
                 }
                 if(!this.readingSteps && !this.outline) {
-                    this.processSection();//to trigger scenario/background event
+                    this.processLastSectionArea();//to trigger scenario/background event
                     this.processBgSteps();
                 }
                 this.keyword = ""; //Not to trigger section event again for each step
@@ -256,6 +233,35 @@ class FeatureParser{
             //description
             this.addDescription(line);
         }
+    }
+
+    markSectionBegining(){
+        this.processLastSectionArea();
+        const keyword = this.sectionMatch[1];
+        let statement = this.sectionMatch[2];
+        this.sectionMatch = null;//reset
+        if(statement) statement = statement.trim();
+        this.keyword = keyword;
+
+        if(keyword.length > 10 && (keyword === "Scenario Outline" || keyword == "Scenario Template")){
+            this.keyword = "Scenario";
+            this.scenario(this.keyword, statement, keyword, true);
+        }else if( keyword === "Scenario" || keyword === "Example" ){
+            this.scenario(this.keyword, statement, keyword, false);
+        }else if( keyword === "Scenarios" || keyword === "Examples" ){
+            this.keyword = "Scenario"; // To trigger `scenario` event for each row of Examples
+            this.examples(this.keyword, statement);
+        }else if( keyword === "Background"){
+            this.background(this.keyword, statement);
+        }else if( keyword === "Rule"){
+            this.rule(this.keyword, statement);
+        }else if( keyword === "Feature"){
+            this.feature(this.keyword, statement);
+        }else{
+            this.addDescription(line);
+            return;
+        }
+        this.sectionCount++;
     }
 
     feature(keyword, statement){
@@ -386,9 +392,9 @@ class FeatureParser{
     }
 
     /**
-     * Trigger an event when a section is completed
+     * To process Section name, statement and description
      */
-    processSection(){
+    processLastSectionArea(){
         if(this.keyword){
             if(this.keyword[0] === "F" || this.keyword[0] === "R"){
                 this.trigger(this.keyword.toLowerCase(),this.currentSection);
@@ -408,7 +414,7 @@ class FeatureParser{
      * @param {array} dataObj 
      */
     processScenarioOutline(dataObjKeys, dataObj){
-        this.processSection(); //trigger `scenario` event
+        this.processLastSectionArea(); //trigger `scenario` event
         this.processBgSteps();
         for (var i = 0; i < this.steps.length; i++){
             //clone step

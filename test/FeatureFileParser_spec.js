@@ -46,8 +46,6 @@ describe("Feature file Parser", function () {
                 When I use the app
                 Then I am notified about overdue tasks
 
-
-
             Example: Already used today
                 Given I last used the app earlier today
                 When I use the app
