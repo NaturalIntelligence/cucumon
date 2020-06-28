@@ -4,7 +4,8 @@
   "description": "Cucumber Gherkin Feature file parser with custom additional features",
   "main": "index.js",
   "scripts": {
-    "test": "jasmine test/*spec.js"
+    "test": "jasmine test/*spec.js",
+    "coverage": "istanbul cover -x \"cli.js\" -x \"test/*spec.js\" jasmine test/*spec.js;"
   },
   "keywords": [
     "cucumber",
@@ -15,6 +16,7 @@
   "author": "Amit Kumar Gupta",
   "license": "MIT",
   "devDependencies": {
+    "istanbul": "^0.4.5",
     "jasmine": "^3.5.0"
   },
   "dependencies": {
