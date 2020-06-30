@@ -10,6 +10,12 @@ describe("Tags", function () {
             'background',
                 'Given',
             'rule',
+            'scenario outline',
+                'Given',
+                'And',
+            'scenario outline',
+                'Given',
+                'And',
             'focused tag',
                 'Given',
                 'When',
@@ -30,7 +36,7 @@ describe("Tags", function () {
         let output = testContent( expectedEventSeq, {
             tagExpression: "@all"
         });
-        expect(output.feature.rules[0].scenarios.length).toBe(2)
+        expect(output.feature.rules[0].scenarios.length).toBe(4)
         expect(output.feature.rules[1].scenarios.length).toBe(2)
         expect(output.feature.rules.length).toBe(2)
         testStream( expectedEventSeq, {
@@ -40,7 +46,7 @@ describe("Tags", function () {
         output = testContent( expectedEventSeq,  {
             tagExpression: ""
         });
-        expect(output.feature.rules[0].scenarios.length).toBe(2)
+        expect(output.feature.rules[0].scenarios.length).toBe(4)
         expect(output.feature.rules[1].scenarios.length).toBe(2)
         expect(output.feature.rules.length).toBe(2)
         testStream(expectedEventSeq, {
@@ -145,6 +151,12 @@ describe("Tags", function () {
             'background',
                 'Given',
             'rule',
+            'scenario outline',
+                'Given',
+                'And',
+            'scenario outline',
+                'Given',
+                'And',
             'focused tag',
                 'Given',
                 'When',
@@ -158,7 +170,7 @@ describe("Tags", function () {
         const output = testContent( expectedEventSeq, {
             tagExpression: "@all but not @other"
         });
-        expect(output.feature.rules[0].scenarios.length).toBe(1)
+        expect(output.feature.rules[0].scenarios.length).toBe(3)
         expect(output.feature.rules[1].scenarios.length).toBe(1)
         expect(output.feature.rules.length).toBe(2)
         testStream( expectedEventSeq, {

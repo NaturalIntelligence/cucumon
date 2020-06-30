@@ -8,6 +8,15 @@ Background:
 #@notAllowed
 Rule: rule for tags
 
+    Scenario Template: scenario outline
+        Given an example 
+        And I can pass "<data>" 
+
+        Examples:
+        | data  |
+        | a |
+        | b |
+
     @focus
     Scenario: focused tag
         Given a scenario of focused tag

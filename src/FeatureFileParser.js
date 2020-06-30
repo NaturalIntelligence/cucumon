@@ -145,7 +145,7 @@ class FeatureParser{
                     this.sectionMatch = sectionRegex.exec(this.oldLine);
     
                     //Skip if tag doesn't match
-                    if(this.sectionMatch && this.skip){//start of a section
+                    if(this.sectionMatch && this.skip && this.sectionMatch[1] !== "Examples" && this.sectionMatch[1] !=="Scenarios" ){//start of a section
                         this.skip = "";
                         this.processLine(this.oldLine);
                     }else if(this.skip){ //skip current line to be processed
@@ -164,6 +164,7 @@ class FeatureParser{
         
         //const temp = this.description;
         //this.description = "";
+        //TODO: shift where reading data table and check for next line
         if(this.readingDataTable && line[0] !== "|"){
             this.readingDataTable = false;
             this.processStepArgument();
