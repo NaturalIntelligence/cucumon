@@ -194,7 +194,7 @@ class FeatureParser{
             }else if(this.readingSteps){
                 if(line[0] === "|"){//data table
                     this.readingDataTable = true;
-                    this.stepDataTable.push( util.splitOn(line, "|"));
+                    this.stepDataTable.push( util.splitOnPipe(line));
                 }else if(line === '"""' ){//docStrng
                     if(this.readingDocString){
                         this.processStepArgument();
@@ -209,15 +209,17 @@ class FeatureParser{
                     throw  new Error("Unexpected step at linenumber " + this.oldLineNumber)
                 }
             }else if(this.readingExamples && line[0] === "|"){
-                line = line.substring(1,line.length - 1);
                 if(this.examplesHeader.length === 0){
-                    const temp = line.split("|");
-                    for(let i = 0; i < temp.length;i++){
-                        temp[i] = "<"+temp[i].trim() + ">";
-                    }
-                    this.examplesHeader = temp;
+                    this.examplesHeader = util.splitExampleHeader(line);
+                    this.examplesCount = 0;
                 }else{
-                    this.processScenarioOutline(this.examplesHeader, line.split("|"));
+                    if(this.examplesCount === 0){
+                        this.oldScenario = this.scenarioObj;
+                    }else{
+                        this.createScenario(this.oldScenario.keyword, this.oldScenario.secionName, this.oldScenario.statement);
+                    }
+                    this.examplesCount++;
+                    this.processScenarioOutline(this.examplesHeader, util.splitOnPipe(line));
                 }
             }else if(this.steps.length === 0){
                 //description
@@ -341,6 +343,12 @@ class FeatureParser{
         }
     }
 
+    createScenario(keyword, secionName, statement){
+        const scenario = new Scenario( this.scenarioCount, keyword.toLowerCase(), secionName, statement, this.oldLineNumber); 
+        scenario.tags = this.tags;
+        this.scenarioObj = scenario;
+        this.currentSection.scenarios.push(scenario);
+    }
     beforeScenario(keyword, statement, secionName){
         this.steps = [];
         this.stepDataTable = [];
@@ -354,16 +362,13 @@ class FeatureParser{
             return;
         }else{
             this.scenarioCount++;
-            const scenario = new Scenario( this.scenarioCount, keyword.toLowerCase(), secionName, statement, this.oldLineNumber); 
-            scenario.tags = this.tags;
-            this.scenarioObj = scenario;
-            this.tags = [];
             if(this.output.feature.rules.length === 0){
                 const ruleSection = new Rule("__default", -1);
                 this.output.feature.rules.push(ruleSection);
                 this.currentSection = ruleSection;
             }
-            this.currentSection.scenarios.push(scenario);
+            this.createScenario(keyword, secionName, statement);
+            this.tags = [];
         }
 
     }
@@ -414,6 +419,8 @@ class FeatureParser{
      * @param {array} dataObj 
      */
     processScenarioOutline(dataObjKeys, dataObj){
+        console.log(dataObj)
+        console.log(dataObjKeys)
         this.processLastSectionArea(); //trigger `scenario` event
         this.processBgSteps();
         for (var i = 0; i < this.steps.length; i++){

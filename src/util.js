@@ -41,13 +41,34 @@ function splitOn(str, ch){
       if(newIndex !== -1){
         if(str[newIndex-1] !== "\\"){
           let value = str.substring(index + 1, newIndex).trim();
-          value = value.replace("\\"+ch, ch);
+          value = value.replace("\\"+ch, ch); //FIX: change it with replace all
           result.push( value )
         }else{
           continue;
         }
       }
       index = newIndex;
+  }
+  return result;
+}
+
+function splitOnPipe(str){
+  const splittedArr = str.split(/(?<!\\)\|/);
+  const result = new Array(splittedArr.length - 2);
+  for(let i = 1; i < splittedArr.length - 1; i++){
+    result[i - 1] = splittedArr[i].trim().replace(/\\\|/g,"|");
+  }
+  return result;
+}
+
+function splitExampleHeader(str){
+  const splittedArr = str.split("|");
+  const result = new Array(splittedArr.length - 2);
+  for(let i = 1; i < splittedArr.length - 1; i++){
+    result[i - 1] = "<"+splittedArr[i].trim() + ">";
+    if(result[i - 1] === "<>"){
+      throw new Error("Examples header should not be blank");
+    }
   }
   return result;
 }
@@ -83,6 +104,8 @@ function splitInObject(str, ch, keys){
 
 
 exports.splitOn = splitOn;
+exports.splitOnPipe = splitOnPipe;
+exports.splitExampleHeader = splitExampleHeader;
 exports.splitInObject = splitInObject;
 exports.getAllMatches = getAllMatches;
 exports.getAllRawMatches = getAllRawMatches;
