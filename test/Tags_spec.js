@@ -144,6 +144,26 @@ describe("Tags", function () {
             tagExpression: "@other"
         }, done);
     });
+
+    it("should process no scenario when @notExist", async function(done) {
+        const expectedEventSeq = [
+            'feature',
+            'background',
+                'Given',
+            'rule',
+            'rule',
+        ];
+
+        const output = testContent( expectedEventSeq, {
+            tagExpression: "@notExist"
+        });
+        expect(output.feature.rules[0].scenarios.length).toBe(0)
+        expect(output.feature.rules[1].scenarios.length).toBe(0)
+        expect(output.feature.rules.length).toBe(2)
+        testStream( expectedEventSeq, {
+            tagExpression: "@notExist"
+        }, done);
+    });
     
     it("should process @all but not @other scenarios only", async function(done) {
         const expectedEventSeq = [
