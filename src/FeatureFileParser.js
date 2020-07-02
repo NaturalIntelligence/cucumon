@@ -133,15 +133,31 @@ class FeatureParser{
      */
     readLine(line){
         this.lineNumber++;
-        if(line.length !== 0 && line[0] !== '#'){
+        if(line.length !== 0){
             if(!this.oldLine) {
                 this.oldLine = line;
             }else{
-                this.nextLine = line;
+                    
 
                 if( this.oldLine.indexOf("@") === 0){
                     this.recordTags(this.oldLine);
+                }else if(this.readingDocString){
+                    if(this.oldLine === '"""'){
+                        this.stepDocString = this.stepDocString.substring(1); //remove first \n
+                        this.processStepArgument();
+                        this.processCurrentStep();
+                        this.readingDocString = false;
+                    }else{
+                        this.stepDocString += "\n" + this.oldLine;
+                    }
                 }else{
+                    if(line[0] === '#') return;
+                    //nextLine points to next non-empty and non-commented line
+                    //This is being used to determine 
+                    //* if Examples rows are end
+                    //* if next statement is dataTable ot docString
+                    this.nextLine = line; 
+
                     this.sectionMatch = sectionRegex.exec(this.oldLine);
     
                     //Skip if tag doesn't match
@@ -197,15 +213,7 @@ class FeatureParser{
                     this.readingDataTable = true;
                     this.stepDataTable.push( util.splitOnPipe(line));
                 }else if(line === '"""' ){//docStrng
-                    if(this.readingDocString){
-                        this.processStepArgument();
-                        this.processCurrentStep();
-                        this.readingDocString = false;
-                    }else{
-                        this.readingDocString = true
-                    }
-                }else if(this.readingDocString){
-                    this.stepDocString += line;
+                    this.readingDocString = true
                 }else{//A step with no matching keyword or start
                     throw  new Error("Unexpected step at linenumber " + this.oldLineNumber)
                 }
@@ -420,8 +428,6 @@ class FeatureParser{
      * @param {array} dataObj 
      */
     processScenarioOutline(dataObjKeys, dataObj){
-        console.log(dataObj)
-        console.log(dataObjKeys)
         this.processLastSectionArea(); //trigger `scenario` event
         this.processBgSteps();
         for (var i = 0; i < this.steps.length; i++){
