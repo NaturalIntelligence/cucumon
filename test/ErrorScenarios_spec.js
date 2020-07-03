@@ -205,4 +205,27 @@ describe("Error in ", function () {
             //console.log(JSON.stringify(parser.output,null,4));
         });
     });
+
+    describe("Inputs", function () {
+
+        it("should throw error when scenario before feature section", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `Feature: Overdue tasks
+
+            Example: Already used today
+                Given I last used the app earlier today
+                When I use the app
+                | and | with | data table|
+                """
+                with doc string
+                """
+                Then I am not notified about overdue tasks
+            `;
+
+            expect( () => {
+                parser.parse(featureContent)
+            }).toThrowError("Only data table or doc string is allowed for step at line number 5")
+            //console.log(JSON.stringify(parser.output,null,4));
+        });
+    });
 });

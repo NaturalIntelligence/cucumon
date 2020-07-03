@@ -213,7 +213,8 @@ class FeatureParser{
                     this.readingDataTable = true;
                     this.stepDataTable.push( util.splitOnPipe(line));
                 }else if(line === '"""' ){//docStrng
-                    this.readingDocString = true
+                    this.readingDocString = true;
+                    this.stepDocString = "";
                 }else{//A step with no matching keyword or start
                     throw  new Error("Unexpected step at linenumber " + this.oldLineNumber)
                 }
@@ -463,14 +464,13 @@ class FeatureParser{
     }
 
     processStepArgument(){
-        if(this.stepDocString.length > 0 && this.stepDataTable.length > 0) {
-            throw  new Error("Only data table or doc string is allowed for step at line number " + this.stel.lineNumber)
+        if(this.step.argument) {
+            throw  new Error("Only data table or doc string is allowed for step at line number " + this.step.lineNumber)
         }else if(this.stepDocString.length > 0){
             this.step.argument = this.stepDocString;
         }else{
             this.step.argument = this.stepDataTable;
         }
-        this.stepDocString = "";
         this.stepDataTable = [];
     }
 
@@ -490,10 +490,6 @@ class FeatureParser{
                 this.trigger('step', this.step);
             }
         }
-    }
-    
-    currentStep(){
-        return this.steps[ this.steps.length - 1];
     }
 
     trigger(keyword, data){
