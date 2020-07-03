@@ -316,13 +316,15 @@ class FeatureParser{
     }
 
     background(keyword, statement){
+        //when comes at first position
         this.itShouldComeAfterFeatureSection(keyword);
-        if(this.bgScenario || this.readingScenario || this.tags.length > 0){
-            //when comes at first position
+        if(this.tags.length > 0){
+            //when tags come before
+            throw  new Error("Background section must not have tags, at linenumber " + this.oldLineNumber)
+        }else if(this.bgScenario || this.readingScenario){
             //when repeated
             //when come after any scenario (outline)
-            //when tags come before
-            throw  new Error("Unexpected " + keyword + " at linenumber " + this.oldLineNumber)
+            throw  new Error("Unexpected Background section at linenumber " + this.oldLineNumber)
         }else{
             this.readingScenario = true; //to process steps
             this.bgScenario = true; //to validate steps

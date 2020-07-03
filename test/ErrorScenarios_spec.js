@@ -151,7 +151,7 @@ describe("Error in ", function () {
 
     describe("Background", function () {
 
-        it("should throw error when scenario before feature section", function() {
+        it("should throw error when background has no step", function() {
             const parser = new FeatureFileParser();
             const featureContent = `Feature: Overdue tasks
             
@@ -169,7 +169,7 @@ describe("Error in ", function () {
             //console.log(JSON.stringify(parser.output,null,4));
         });
         
-        it("should throw error when scenario before feature section", function() {
+        it("should throw error when background has not step with rule", function() {
             const parser = new FeatureFileParser();
             const featureContent = `Feature: Overdue tasks
             
@@ -189,7 +189,7 @@ describe("Error in ", function () {
             //console.log(JSON.stringify(parser.output,null,4));
         });
         
-        it("should throw error when scenario before feature section", function() {
+        it("should throw error when background has no steps and not scenario", function() {
             const parser = new FeatureFileParser();
             const featureContent = `Feature: Overdue tasks
             
@@ -202,6 +202,65 @@ describe("Error in ", function () {
             expect( () => {
                 parser.parse(featureContent)
             }).toThrowError("No Scenario/Example found")
+            //console.log(JSON.stringify(parser.output,null,4));
+        });
+
+        it("should throw error when background comes before Feature section", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `
+            
+            Background: without steps
+
+            Feature: Overdue tasks
+
+            Rule: sample rule
+
+            `;
+
+            expect( () => {
+                parser.parse(featureContent)
+            }).toThrowError("Background at linenumber 3 before Feature section")
+            //console.log(JSON.stringify(parser.output,null,4));
+        });
+
+        it("should throw error when background has tag", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `Feature: Overdue tasks
+            
+            @err
+            Background: without steps
+                Given I last used the app earlier today
+
+            Example: Already used today
+                Given I last used the app earlier today
+                When I use the app
+                Then I am not notified about overdue tasks
+            `;
+
+            expect( () => {
+                parser.parse(featureContent)
+            }).toThrowError("Background section must not have tags, at linenumber 4")
+            //console.log(JSON.stringify(parser.output,null,4));
+        });
+
+        it("should throw error when background comes after Scenario", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `Feature: Overdue tasks
+            
+            @err
+            Example: Already used today
+                Given I last used the app earlier today
+                When I use the app
+                Then I am not notified about overdue tasks
+            
+            Background: without steps
+                Given I last used the app earlier today
+
+            `;
+
+            expect( () => {
+                parser.parse(featureContent)
+            }).toThrowError("Unexpected Background section at linenumber 9")
             //console.log(JSON.stringify(parser.output,null,4));
         });
     });
