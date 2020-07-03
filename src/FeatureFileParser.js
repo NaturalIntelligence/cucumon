@@ -300,18 +300,26 @@ class FeatureParser{
     }
 
     rule(keyword, statement){
+        //when comes at first position
         this.itShouldComeAfterFeatureSection(keyword);
-        if(this.tags.length > 0 || (this.output.feature.rules.length > 0 && this.output.feature.rules[0].statement === "__default" )){
-            //when repeated
-            //when previous scenarios are not grouped in a rule
-            //when comes at first position
+        if(this.tags.length > 0){
             //when tags come before
-            throw  new Error("Unexpected " + keyword + " at linenumber " + this.oldLineNumber)
-        }else{
-            const ruleSection = new Rule(statement, this.oldLineNumber);
-            this.output.feature.rules.push(ruleSection);
-            this.currentSection = ruleSection;
-            this.readingSteps = false;
+            throw  new Error("Rule section must not have tags, at linenumber " + this.oldLineNumber)
+        }else {
+            const rules = this.output.feature.rules;
+
+            if(rules.length > 0 && rules[ rules.length - 1].scenarios.length === 0 && rules[ rules.length - 1].scenariosSkipped === 0 ){
+                //when repeated
+                throw  new Error("Repeated Rule section at linenumber " + this.oldLineNumber)
+            }else if(rules.length > 0 && rules[0].statement === "__default" ){
+                //when previous scenarios are not grouped in a rule
+                throw  new Error("Unexpected Rule section at linenumber " + this.oldLineNumber)
+            }else{
+                const ruleSection = new Rule(statement, this.oldLineNumber);
+                rules.push(ruleSection);
+                this.currentSection = ruleSection;
+                this.readingSteps = false;
+            }
         }
     }
 
@@ -369,6 +377,7 @@ class FeatureParser{
         this.readingExamples = false;
         this.readingSteps = false;
         if(this.shouldSkip()){
+            this.currentSection.scenariosSkipped++;
             this.keyword = "";
             this.tags = []
             return;

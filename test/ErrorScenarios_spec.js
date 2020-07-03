@@ -52,7 +52,7 @@ describe("Error in ", function () {
         
     });
 
-    describe("Scenario", function () {
+    describe("Scenario Outline", function () {
         
         it("should throw error when scenario outline with no examples", function() {
             const parser = new FeatureFileParser();
@@ -261,6 +261,127 @@ describe("Error in ", function () {
             expect( () => {
                 parser.parse(featureContent)
             }).toThrowError("Unexpected Background section at linenumber 9")
+            //console.log(JSON.stringify(parser.output,null,4));
+        });
+    });
+    
+    describe("Rule", function () {
+
+        xit("should throw error when Rule has some step", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `Feature: Overdue tasks
+            
+            Rule: without steps
+                Given this is invalid 
+
+            Example: Already used today
+                Given I last used the app earlier today
+                When I use the app
+                Then I am not notified about overdue tasks
+            `;
+
+            expect( () => {
+                parser.parse(featureContent)
+            }).toThrowError("Rule at linenumber 3 has steps")
+            //console.log(JSON.stringify(parser.output,null,4));
+        });
+        
+        it("should throw error when Rule is repeated", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `Feature: Overdue tasks
+            
+            Rule: sample rule
+        
+            Rule: Other rule
+
+                Example: Already used today
+                    Given I last used the app earlier today
+                    When I use the app
+                    Then I am not notified about overdue tasks
+            `;
+
+            expect( () => {
+                parser.parse(featureContent)
+            }).toThrowError("Repeated Rule section at linenumber 5")
+            //console.log(JSON.stringify(parser.output,null,4));
+        });
+
+        it("should throw error when Rule comes before Feature section", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `
+            
+            Rule: sample rule
+
+            Feature: Overdue tasks
+
+            `;
+
+            expect( () => {
+                parser.parse(featureContent)
+            }).toThrowError("Rule at linenumber 3 before Feature section")
+            //console.log(JSON.stringify(parser.output,null,4));
+        });
+
+        it("should throw error when Rule has tag", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `Feature: Overdue tasks
+            
+            @err
+            Rule: with tags
+
+            Example: Already used today
+                Given I last used the app earlier today
+                When I use the app
+                Then I am not notified about overdue tasks
+            `;
+
+            expect( () => {
+                parser.parse(featureContent)
+            }).toThrowError("Rule section must not have tags, at linenumber 4")
+            //console.log(JSON.stringify(parser.output,null,4));
+        });
+
+        it("should throw error when Rule come in last", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `Feature: Overdue tasks
+            
+            @err
+            Example: Already used today
+                Given I last used the app earlier today
+                When I use the app
+                Then I am not notified about overdue tasks
+            
+            Rule: in last
+
+            `;
+
+            expect( () => {
+                parser.parse(featureContent)
+            }).toThrowError("Unexpected Rule section at linenumber 9")
+            //console.log(JSON.stringify(parser.output,null,4));
+        });
+        
+        it("should throw error when there is rule but some scenarios are without rules", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `Feature: Overdue tasks
+            
+            @err
+            Example: Already used today
+                Given I last used the app earlier today
+                When I use the app
+                Then I am not notified about overdue tasks
+            
+            Rule: in last
+
+            Example: Already used today
+                Given I last used the app earlier today
+                When I use the app
+
+            `;
+
+            expect( () => {
+                parser.parse(featureContent)
+            }).toThrowError("Unexpected Rule section at linenumber 9")
             //console.log(JSON.stringify(parser.output,null,4));
         });
     });
