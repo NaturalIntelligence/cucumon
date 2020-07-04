@@ -62,7 +62,7 @@ class FeatureParser{
     }
 
     /**
-     * 
+     * Register an event
      * @param {string} eventName : feature, scenario, step
      * @param {Function} fn 
      */

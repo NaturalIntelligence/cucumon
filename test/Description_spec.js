@@ -60,7 +60,7 @@ describe("Description", function () {
         `;
 
         const output = testContent( featureContent, expectedEventSeq, {});
-        console.log(JSON.stringify(output.feature, null,4 ));
+        //console.log(JSON.stringify(output.feature, null,4 ));
         
         expect(output.feature.description).toBe("This is the multiline description\nwhich can have : in between");
         expect(output.feature.background.description).toBe("can also have multiline description\nwith : in between 1");
@@ -96,7 +96,7 @@ function testContent(content, expectedEventSeq, options){
 
     const output = parser.parse(content.toString()) ;
 
-    console.log(stepWords);
+    //console.log(stepWords);
     expect(stepWords).toEqual(expectedEventSeq);
 
     return output;
