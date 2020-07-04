@@ -408,11 +408,17 @@ class FeatureParser{
     }
 
     addDescription(line){
-            if(this.currentSection.description === "") {
-                this.currentSection.description = line;
-            }else{
-                this.currentSection.description += "\n" +line;
-            }
+        let obj;
+        if(this.keyword[0] === "B" || this.keyword[0] === "S"){
+            obj = this.scenarioObj;
+        }else{
+            obj = this.currentSection;
+        }
+        if(obj.description === "") {
+            obj.description = line;
+        }else{
+            obj.description += "\n" +line;
+        }
     }
 
     recordTags(line){
