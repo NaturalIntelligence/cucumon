@@ -16,10 +16,7 @@ class FeatureParser{
 
     constructor(options){
         this.options = Object.assign( {tagExpression: "" }, options );
-        this._resetParameters();
-    }
-
-    _resetParameters(){
+        //this._resetParameters();
         this.events = {
             "feature" : [],
             "rule" : [],
@@ -30,25 +27,37 @@ class FeatureParser{
             "end": [],
             "error": [],
         }
-        //this.clubBackgroundSteps = true;
         this.tagExpParser = new TagExpParser(this.options.tagExpression);
-        this.keyword = "";
+    }
+
+    _resetParameters(){
         this.bgScenario = false; //indicate of current scenario is the bg scenario
         this.bg = new Background();
-        this.sectionCount =0;
-        this.lineNumber = 0;
-        this.oldLineNumber = 0;
         this.columnNames = [];
-        this.scenarioCount = 0;
-        this.featureCount = 0;
-        this.ruleCount = 0;
-        this.stepCount = 0;
-        this.tags = [];
-        this.steps = [];
+        this.currentSection = {};
         this.examplesHeader = [];
+        this.featureCount = 0;
+        this.keyword = "";
+        this.lineNumber = 0;
+        this.outline = false;
+        this.output = {};
+        this.oldLineNumber = 0;
+        this.ruleCount = 0;
+        this.readingExamples = false;
+        this.readingScenario = false;
+        this.readingSteps = false;
+        this.ruleCount = 0;
+        this.scenarioCount = 0;
+        this.sectionCount = 0;
+        this.sectionObj = {};
+        this.skip = "";
+        this.steps = [];
+        this.stepCount = 0;
         this.stepDataTable = [];
         this.stepDocString = "";
-        this.skip = "";
+        this.tags = [];
+        //this.oldLine = ;
+        this.nextLine = null;
     }
 
     /**
@@ -66,6 +75,7 @@ class FeatureParser{
     }
 
     parseFile(inputStream){
+        this._resetParameters();
         const lineReader = require('readline').createInterface({
             input: inputStream
         });
@@ -105,6 +115,7 @@ class FeatureParser{
 
 
     parse(fileContent){
+        this._resetParameters();
         if(typeof fileContent !== 'string') throw new Error('Incompatible input type. String is expected.');
         let line = "";
         for(let i=0; i<fileContent.length; i++){

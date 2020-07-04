@@ -8,7 +8,7 @@ describe("Feature file Parser", function () {
             clubBgSteps: false
         });
 
-        const stepWords = [];
+        let stepWords = [];
         parser.on("feature", (obj) => {
             expect(obj.keyword).toBe("feature");
         })
@@ -52,6 +52,11 @@ describe("Feature file Parser", function () {
                 Then I am not notified about overdue tasks
         `;
    
+        parser.parse(featureContent)
+        expect(stepWords).toEqual([ 'Given', 'Given', 'When', 'Then', 'Given', 'When', 'Then' ]);
+
+        //call it twice
+        stepWords = [];
         parser.parse(featureContent)
         expect(stepWords).toEqual([ 'Given', 'Given', 'When', 'Then', 'Given', 'When', 'Then' ]);
         //expect(featurePresent).toBeTruthy();
