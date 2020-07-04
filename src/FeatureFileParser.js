@@ -1,4 +1,5 @@
 const TagExpParser = require("bexp");
+const ParsingError = require("./ParsingError");
 
 const util = require("./util.js");
 const Feature = require("./sections/Feature");
@@ -67,7 +68,7 @@ class FeatureParser{
      */
     on(eventName, fn){
         if (!eventName || Object.keys(this.events).indexOf(eventName.toLowerCase()) === -1){
-            throw  new Error("Supported events are " + Object.keys(this.events) )
+            throw  new Error("Supported events are " + Object.keys(this.events))
         }else{
             eventName  = eventName.toLowerCase();
             this.events[eventName].push(fn);
@@ -191,7 +192,7 @@ class FeatureParser{
             let stepMatch = stepsRegex.exec(line);
             if(stepMatch){
                 if(this.readingExamples){
-                    throw new Error("Unexpected step at linenumber " + this.oldLineNumber)
+                    throw new ParsingError("Unexpected step at linenumber " + this.oldLineNumber, this.oldLineNumber)
                 }
                 if(!this.readingSteps && !this.outline) {
                     this.processLastSectionArea();//to trigger scenario/background event
@@ -217,7 +218,7 @@ class FeatureParser{
                     this.readingDocString = true;
                     this.stepDocString = "";
                 }else{//A step with no matching keyword or start
-                    throw  new Error("Unexpected step at linenumber " + this.oldLineNumber)
+                    throw  new ParsingError("Unexpected step at linenumber " + this.oldLineNumber, this.oldLineNumber)
                 }
             }else if(this.readingExamples && line[0] === "|"){
                 if(this.examplesHeader.length === 0){
@@ -238,10 +239,10 @@ class FeatureParser{
                 this.addDescription(line);
             }else{
                 //This code should not be reachable
-                throw  new Error("Unexpected text at linenumber " + this.oldLineNumber)
+                throw  new ParsingError("Unexpected text at linenumber " + this.oldLineNumber, this.oldLineNumber)
             }
         }else if(this.sectionCount === 0){//when some text before Feature: section
-            throw  new Error("Unexpected text at linenumber " + this.oldLineNumber)
+            throw  new ParsingError("Unexpected text at linenumber " + this.oldLineNumber, this.oldLineNumber)
         }else{
             //description
             this.addDescription(line);
@@ -290,7 +291,7 @@ class FeatureParser{
         if(this.sectionCount !== 0){
             //when repeated
             //when dont come at first position
-            throw  new Error("Unexpected " + keyword + " section at linenumber " + this.oldLineNumber)
+            throw  new ParsingError("Unexpected " + keyword + " section at linenumber " + this.oldLineNumber, this.oldLineNumber)
         }else{
             this.sectionCount = 1;
             this.output = {
@@ -305,7 +306,7 @@ class FeatureParser{
     itShouldComeAfterFeatureSection(keyword){
         if(this.sectionCount === 0){
             //when comes before Feature section
-            throw  new Error(keyword + " at linenumber " + this.oldLineNumber + " before Feature section")
+            throw  new ParsingError(keyword + " at linenumber " + this.oldLineNumber + " before Feature section", this.oldLineNumber)
         }
     }
 
@@ -314,16 +315,16 @@ class FeatureParser{
         this.itShouldComeAfterFeatureSection(keyword);
         if(this.tags.length > 0){
             //when tags come before
-            throw  new Error("Rule section must not have tags, at linenumber " + this.oldLineNumber)
+            throw  new ParsingError("Rule section must not have tags, at linenumber " + this.oldLineNumber, this.oldLineNumber)
         }else {
             const rules = this.output.feature.rules;
 
             if(rules.length > 0 && rules[ rules.length - 1].scenarios.length === 0 && rules[ rules.length - 1].scenariosSkipped === 0 ){
                 //when repeated
-                throw  new Error("Repeated Rule section at linenumber " + this.oldLineNumber)
+                throw  new ParsingError("Repeated Rule section at linenumber " + this.oldLineNumber, this.oldLineNumber)
             }else if(rules.length > 0 && rules[0].statement === "__default" ){
                 //when previous scenarios are not grouped in a rule
-                throw  new Error("Unexpected Rule section at linenumber " + this.oldLineNumber)
+                throw  new ParsingError("Unexpected Rule section at linenumber " + this.oldLineNumber, this.oldLineNumber)
             }else{
                 const ruleSection = new Rule(statement, this.oldLineNumber);
                 rules.push(ruleSection);
@@ -338,11 +339,11 @@ class FeatureParser{
         this.itShouldComeAfterFeatureSection(keyword);
         if(this.tags.length > 0){
             //when tags come before
-            throw  new Error("Background section must not have tags, at linenumber " + this.oldLineNumber)
+            throw  new ParsingError("Background section must not have tags, at linenumber " + this.oldLineNumber, this.oldLineNumber)
         }else if(this.bgScenario || this.readingScenario){
             //when repeated
             //when come after any scenario (outline)
-            throw  new Error("Unexpected Background section at linenumber " + this.oldLineNumber)
+            throw  new ParsingError("Unexpected Background section at linenumber " + this.oldLineNumber, this.oldLineNumber)
         }else{
             this.readingScenario = true; //to process steps
             this.bgScenario = true; //to validate steps
@@ -359,7 +360,7 @@ class FeatureParser{
     scenario(keyword, statement, secionName, outlineFlag){
         this.itShouldComeAfterFeatureSection(keyword);
         if(this.scenarioObj && this.scenarioObj.steps.length === 0){
-            throw  new Error(this.scenarioObj.secionName + " at linenumber " + this.scenarioObj.lineNumber + " without steps")
+            throw  new ParsingError(this.scenarioObj.secionName + " at linenumber " + this.scenarioObj.lineNumber + " without steps", this.scenarioObj.lineNumber)
         }else{
             this.outline = outlineFlag;
             this.beforeScenario(keyword, statement, secionName);
@@ -410,7 +411,7 @@ class FeatureParser{
             //when not the part of scenario outline/template
             //when come just after scenario starts. No steps in between
             //when it is the part of Background section
-            throw  new Error("Unexpected Examples section at linenumber " + this.oldLineNumber) 
+            throw  new ParsingError("Unexpected Examples section at linenumber " + this.oldLineNumber, this.oldLineNumber) 
         }else{
             this.readingExamples = true;
             this.readingSteps = false;
@@ -497,7 +498,7 @@ class FeatureParser{
 
     processStepArgument(){
         if(this.step.argument) {
-            throw  new Error("Only data table or doc string is allowed for step at line number " + this.step.lineNumber)
+            throw  new ParsingError("Only data table or doc string is allowed for step at line number " + this.step.lineNumber, this.step.lineNumber)
         }else if(this.stepDocString.length > 0){
             this.step.argument = this.stepDocString;
         }else{
@@ -532,9 +533,9 @@ class FeatureParser{
     
     eofValidation(){
         if(this.scenarioCount === 0 && this.skip === ""){ // when no scenarios are found not when they are skipped due to tag expression
-            throw  new Error( "No Scenario/Example found");
+            throw  new ParsingError( "No Scenario/Example found");
         }else if(this.outline){
-            throw  new Error( "Scenario Outline/Template without Examples at the end of the file")
+            throw  new ParsingError( "Scenario Outline/Template without Examples at the end of the file")
         }
     }
 }

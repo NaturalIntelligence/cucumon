@@ -383,9 +383,12 @@ describe("Error in ", function () {
                 Then I am not notified about overdue tasks
             `;
 
-            expect( () => {
+            try{
                 parser.parse(featureContent)
-            }).toThrowError("Only data table or doc string is allowed for step at line number 5")
+            }catch(e){
+                expect(e.message).toBe("Only data table or doc string is allowed for step at line number 5");
+                expect(e.lineNumber).toBe(5);
+            }
             //console.log(JSON.stringify(parser.output,null,4));
         });
     });
