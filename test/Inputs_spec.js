@@ -82,7 +82,10 @@ describe("Events:", function () {
         expect(rule.scenarios[0].statement).toBe("data table, doc string and special chars");
         expect(rule.scenarios[0].steps.length).toBe(6);
         //should have data table
-        const rows = rule.scenarios[0].steps[1].argument;
+        let rows = rule.scenarios[0].steps[0].argument;
+        expect(rows[0]).toEqual(["with","single","data table","line"]);
+
+        rows = rule.scenarios[0].steps[1].argument;
 
         expect(rows[0][0]).toBe("");
         expect(rows[0][1]).toBe("empty");

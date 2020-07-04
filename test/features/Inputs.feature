@@ -16,6 +16,7 @@ Feature: Special Characters
     @focus
     Scenario: data table, doc string and special chars
         Given a scenario
+            |with|single|data table|line|
         When I pass data table
         #| no header | only data |
             |  | empty|

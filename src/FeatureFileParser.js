@@ -73,7 +73,7 @@ class FeatureParser{
         const that = this;
         const eofListner = function () {
             try{
-                that.readLine(that.oldLine);
+                that.readLine(null);
                 that.eofValidation();
                 that.trigger("end", that.output);
             }catch(e){
@@ -116,12 +116,10 @@ class FeatureParser{
             }
         }
         line = line.trim();
-        if(line){
+        if(line){//when last line is not empty
             this.readLine(line.trim());
-            this.readLine(this.oldLine);
-        }else{
-            this.readLine(this.oldLine)
         }
+        this.readLine(null);
         //this.trigger("end");
         this.eofValidation();
         return this.output;
@@ -133,12 +131,10 @@ class FeatureParser{
      */
     readLine(line){
         this.lineNumber++;
-        if(line.length !== 0){
-            if(!this.oldLine) {
+        if(line == null || line.length !== 0){ // line would be null in case of EOF
+            if(!this.oldLine) { //first non-blank line
                 this.oldLine = line;
             }else{
-                    
-
                 if( this.oldLine.indexOf("@") === 0){
                     this.recordTags(this.oldLine);
                 }else if(this.readingDocString){
@@ -151,7 +147,7 @@ class FeatureParser{
                         this.stepDocString += "\n" + this.oldLine;
                     }
                 }else{
-                    if(line[0] === '#') return;
+                    if(line != null && line[0] === '#') return;
                     //nextLine points to next non-empty and non-commented line
                     //This is being used to determine 
                     //* if Examples rows are end
@@ -178,17 +174,8 @@ class FeatureParser{
 
     processLine(line){
         
-        //const temp = this.description;
-        //this.description = "";
-        //TODO: shift where reading data table and check for next line
-        if(this.readingDataTable && line[0] !== "|"){
-            this.readingDataTable = false;
-            this.processStepArgument();
-            this.processCurrentStep();
-        }
-        
         if(this.sectionMatch){
-            this.markSectionBegining();
+            this.markSectionBegining(line);
         }else if(this.readingScenario){
             let stepMatch = stepsRegex.exec(line);
             if(stepMatch){
@@ -203,15 +190,18 @@ class FeatureParser{
                 this.readingSteps = true;
                 this.step = new Step(stepMatch[1], stepMatch[2].trim(), this.oldLineNumber, this.scenarioObj.id);
                 
-                if(this.nextLine[0] === "|" || this.nextLine === '"""' ){
+                if(this.nextLine != null && (this.nextLine[0] === "|" || this.nextLine === '"""' )){
                     //hold
                 }else{
                     this.processCurrentStep();
                 }
             }else if(this.readingSteps){
                 if(line[0] === "|"){//data table
-                    this.readingDataTable = true;
                     this.stepDataTable.push( util.splitOnPipe(line));
+                    if(this.nextLine == null || this.nextLine[0] !== "|"){
+                        this.processStepArgument();
+                        this.processCurrentStep();
+                    }
                 }else if(line === '"""' ){//docStrng
                     this.readingDocString = true;
                     this.stepDocString = "";
@@ -247,29 +237,38 @@ class FeatureParser{
         }
     }
 
-    markSectionBegining(){
-        this.processLastSectionArea();
+    markSectionBegining(line){
         const keyword = this.sectionMatch[1];
         let statement = this.sectionMatch[2];
         this.sectionMatch = null;//reset
         if(statement) statement = statement.trim();
-        this.keyword = keyword;
 
         if(keyword.length > 10 && (keyword === "Scenario Outline" || keyword == "Scenario Template")){
+            this.processLastSectionArea();
             this.keyword = "Scenario";
             this.scenario(this.keyword, statement, keyword, true);
         }else if( keyword === "Scenario" || keyword === "Example" ){
+            this.processLastSectionArea();
+            this.keyword = keyword;
             this.scenario(this.keyword, statement, keyword, false);
         }else if( keyword === "Scenarios" || keyword === "Examples" ){
+            this.processLastSectionArea();
             this.keyword = "Scenario"; // To trigger `scenario` event for each row of Examples
             this.examples(this.keyword, statement);
         }else if( keyword === "Background"){
+            this.processLastSectionArea();
+            this.keyword = keyword;
             this.background(this.keyword, statement);
         }else if( keyword === "Rule"){
+            this.processLastSectionArea();
+            this.keyword = keyword;
             this.rule(this.keyword, statement);
         }else if( keyword === "Feature"){
+            this.processLastSectionArea();
+            this.keyword = keyword;
             this.feature(this.keyword, statement);
         }else{
+            //when description has : after first word
             this.addDescription(line);
             return;
         }
@@ -409,8 +408,11 @@ class FeatureParser{
     }
 
     addDescription(line){
-        //if(!this.bgScenario) Allow background to have description
-            this.currentSection.description += "\n" +line;
+            if(this.currentSection.description === "") {
+                this.currentSection.description = line;
+            }else{
+                this.currentSection.description += "\n" +line;
+            }
     }
 
     recordTags(line){
@@ -425,6 +427,8 @@ class FeatureParser{
             if(this.keyword[0] === "F" || this.keyword[0] === "R"){
                 this.trigger(this.keyword.toLowerCase(),this.currentSection);
             }else if(this.keyword[0] === "B"){
+                this.readingScenario = false;
+                this.readingSteps = false;
                 if(!this.options.clubBgSteps) this.trigger(this.keyword.toLowerCase(),this.scenarioObj);
             }else if( this.keyword[this.keyword.length - 1] === "s"){//skip Examples and Scenarios
             }else{
@@ -453,7 +457,7 @@ class FeatureParser{
             this.trigger("step", step);
         }
         //this.keyword need to be reset so next section don't trigger event for last section
-        if(this.nextLine && this.nextLine[0] !== "|") {
+        if(this.nextLine == null || this.nextLine[0] !== "|") {
             this.outline = false;
             this.keyword = "";
         }
@@ -504,7 +508,6 @@ class FeatureParser{
     }
 
     trigger(keyword, data){
-        //console.log(keyword, data);
         for(let i=0; i< this.events[keyword].length; i++){
             this.events[keyword][i](data);
         }

@@ -46,7 +46,7 @@ describe("Error in ", function () {
     
             expect( () => {
                 parser.parse(featureContent)
-            }).toThrowError("Example at linenumber 2 before Feature section")
+                }).toThrowError("Example at linenumber 2 before Feature section")
             //console.log(JSON.stringify(parser.output,null,4));
         });
         
@@ -266,25 +266,6 @@ describe("Error in ", function () {
     });
     
     describe("Rule", function () {
-
-        xit("should throw error when Rule has some step", function() {
-            const parser = new FeatureFileParser();
-            const featureContent = `Feature: Overdue tasks
-            
-            Rule: without steps
-                Given this is invalid 
-
-            Example: Already used today
-                Given I last used the app earlier today
-                When I use the app
-                Then I am not notified about overdue tasks
-            `;
-
-            expect( () => {
-                parser.parse(featureContent)
-            }).toThrowError("Rule at linenumber 3 has steps")
-            //console.log(JSON.stringify(parser.output,null,4));
-        });
         
         it("should throw error when Rule is repeated", function() {
             const parser = new FeatureFileParser();
