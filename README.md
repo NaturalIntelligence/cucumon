@@ -1,6 +1,9 @@
 # Cucumon
 Gherkin like feature file parser with a dash of lemon.
-<img align="center" src="assets/logo.png">
+
+
+
+<img align="center" src="assets/logo.png" alt="cucumon logo" />
 
 ## How to use
 
