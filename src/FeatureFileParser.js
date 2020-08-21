@@ -72,6 +72,9 @@ class FeatureParser{
     readRuleAndBgSection(){
         let rule;
         if(this.section.keyword === 'Rule'){
+            if(this.result.feature.rules.length > 0 && this.result.feature.rules[0].statement === "__default"){
+                throw new ParsingError("Unexpected Rule section at line number " + this.section.lineNumber, this.section.lineNumber);
+            }
             this.validateTags();
             this.readDescription();
             rule = new Rule(this.section.statement, this.section.description, this.section.lineNumber + 1);
@@ -164,12 +167,17 @@ class FeatureParser{
         return false;
     }
 
+    startingOfAnySection(line){
+        if( line[0] === '@' || anySectionRegex.test(line)) return true;
+        return false;
+    }
+
     readDescription(){
         let description = [];
         for(;this.lineNumber < this.lines.length; this.lineNumber++){
             let line = this.lines[this.lineNumber].trim();
             if(line[0] === '#') continue;
-            else if( this.startingOfASection(line)) break;
+            else if( this.startingOfAnySection(line)) break;
             else description.push(line);
         }
         this.section.description = description.join("\n").trim();
@@ -184,7 +192,7 @@ class FeatureParser{
             scenarios.push(scenario);
         }else if(section === "Scenario Outline" || section === "Scenario Template"){
             const scenarioOutline = this.readScenario();
-
+            if(scenarioOutline.steps.length === 0) throw new ParsingError("No step is found for " + section + " at line number " + scenario.lineNumber, scenario.lineNumber);
             const examples = this.readExamples();
             for(let i=1; i<examples.length; i++){ //for each example row
                 let scenarioStatement = this.resolveWithExample(scenarioOutline.statement, examples, i);
@@ -215,8 +223,10 @@ class FeatureParser{
 
                 this.currentRule().scenarios.push(scenario);
             }
-        }else{
+        }else if(this.lineNumber === this.lines.length){
             throw new ParsingError("Unexpected section at the end of the file", this.section.lineNumber);
+        }else{
+            throw new ParsingError("Unexpected section at line number " + (this.section.lineNumber+1), this.section.lineNumber+1);
         }
     }
 
@@ -261,7 +271,7 @@ class FeatureParser{
             if(line[0] === '#' && line[1] === '>') break;
             else if(line[0] === '#') continue;
             else if( stepsRegex.test(line)) break;
-            else if( this.startingOfASection(line)) //A section without steps
+            else if( this.startingOfAnySection(line)) //A section without steps
                 throw new ParsingError("Unexpected section at line number "+ (this.lineNumber+1), this.lineNumber+1)
             else description.push(line);
         }
@@ -350,7 +360,9 @@ class FeatureParser{
     }
 
     readExamples(){
-        const sectionLine = this.lines[this.lineNumber].trim();
+        let sectionLine = this.lines[this.lineNumber];
+        if(!sectionLine) throw new ParsingError("Examples section was expected but reached to EOL", this.lineNumber);
+        sectionLine = sectionLine.trim();
         if(sectionLine.match(examplesRegex)){
             const examplesTable = [];
             let examplesCount=0;

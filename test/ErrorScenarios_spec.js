@@ -18,12 +18,12 @@ describe("Error in ", function () {
             `;
     
             expect( () => {
-                parser.parse(featureContent)
-            }).toThrowError("Example at linenumber 2 without steps")
+                parser.parse(featureContent);
+            }).toThrowError("Unexpected section at line number 4")
             //console.log(JSON.stringify(parser.output,null,4));
         });
 
-        it("should throw error when only scenario", function() {
+        it("should throw error when only scenario but no feature section", function() {
             const parser = new FeatureFileParser();
             const featureContent = `
                 Example: Already used today
@@ -34,7 +34,7 @@ describe("Error in ", function () {
     
             expect( () => {
                 parser.parse(featureContent)
-            }).toThrowError("Example at linenumber 2 before Feature section")
+            }).toThrowError("Feature section was expected at line number 2")
             //console.log(JSON.stringify(parser.output,null,4));
         });
 
@@ -46,7 +46,7 @@ describe("Error in ", function () {
     
             expect( () => {
                 parser.parse(featureContent)
-                }).toThrowError("Example at linenumber 2 before Feature section")
+                }).toThrowError("Feature section was expected at line number 2")
             //console.log(JSON.stringify(parser.output,null,4));
         });
         
@@ -64,8 +64,8 @@ describe("Error in ", function () {
             `;
     
             expect( () => {
-                parser.parse(featureContent)
-            }).toThrowError("Scenario Outline/Template without Examples at the end of the file")
+                parser.parse(featureContent);
+            }).toThrowError("Examples section was expected but reached to EOL")
 
         });
 
@@ -82,8 +82,8 @@ describe("Error in ", function () {
             `;
     
             expect( () => {
-                parser.parse(featureContent)
-            }).toThrowError("Scenario Outline at linenumber 3 without steps")
+                parser.parse(featureContent);
+            }).toThrowError("Unexpected section at line number 5")
 
         });
 
@@ -105,7 +105,7 @@ describe("Error in ", function () {
     
             expect( () => {
                 parser.parse(featureContent)
-            }).toThrowError("Unexpected Examples section at linenumber 5")
+            }).toThrowError("Unexpected section at line number 5")
 
         });
     });
@@ -125,7 +125,7 @@ describe("Error in ", function () {
 
             expect( () => {
                 parser.parse(featureContent)
-            }).toThrowError("Example at linenumber 1 before Feature section")
+            }).toThrowError("Feature section was expected at line number 1")
             //console.log(JSON.stringify(parser.output,null,4));
         });
 
@@ -143,7 +143,7 @@ describe("Error in ", function () {
     
             expect( () => {
                 parser.parse(featureContent)
-            }).toThrowError("Unexpected Feature section at linenumber 3")
+            }).toThrowError("Unexpected section at line number 3")
             //console.log(JSON.stringify(parser.output,null,4));
         });
     
@@ -165,7 +165,7 @@ describe("Error in ", function () {
 
             expect( () => {
                 parser.parse(featureContent)
-            }).toThrowError("Background at linenumber 3 without steps")
+            }).toThrowError("Unexpected section at line number 5")
             //console.log(JSON.stringify(parser.output,null,4));
         });
         
@@ -173,10 +173,10 @@ describe("Error in ", function () {
             const parser = new FeatureFileParser();
             const featureContent = `Feature: Overdue tasks
             
-            Background: without steps
-
             Rule: sample rule
 
+                Background: without steps
+            
                 Example: Already used today
                     Given I last used the app earlier today
                     When I use the app
@@ -185,44 +185,10 @@ describe("Error in ", function () {
 
             expect( () => {
                 parser.parse(featureContent)
-            }).toThrowError("Background at linenumber 3 without steps")
+            }).toThrowError("Unexpected section at line number 7")
             //console.log(JSON.stringify(parser.output,null,4));
         });
         
-        it("should throw error when background has no steps and not scenario", function() {
-            const parser = new FeatureFileParser();
-            const featureContent = `Feature: Overdue tasks
-            
-            Background: without steps
-
-            Rule: sample rule
-
-            `;
-
-            expect( () => {
-                parser.parse(featureContent)
-            }).toThrowError("No Scenario/Example found")
-            //console.log(JSON.stringify(parser.output,null,4));
-        });
-
-        it("should throw error when background comes before Feature section", function() {
-            const parser = new FeatureFileParser();
-            const featureContent = `
-            
-            Background: without steps
-
-            Feature: Overdue tasks
-
-            Rule: sample rule
-
-            `;
-
-            expect( () => {
-                parser.parse(featureContent)
-            }).toThrowError("Background at linenumber 3 before Feature section")
-            //console.log(JSON.stringify(parser.output,null,4));
-        });
-
         it("should throw error when background has tag", function() {
             const parser = new FeatureFileParser();
             const featureContent = `Feature: Overdue tasks
@@ -239,7 +205,7 @@ describe("Error in ", function () {
 
             expect( () => {
                 parser.parse(featureContent)
-            }).toThrowError("Background section must not have tags, at linenumber 4")
+            }).toThrowError("Tags are not expected for Background section at linenumber 3")
             //console.log(JSON.stringify(parser.output,null,4));
         });
 
@@ -260,7 +226,7 @@ describe("Error in ", function () {
 
             expect( () => {
                 parser.parse(featureContent)
-            }).toThrowError("Unexpected Background section at linenumber 9")
+            }).toThrowError("Unexpected section at line number 9")
             //console.log(JSON.stringify(parser.output,null,4));
         });
     });
@@ -283,7 +249,7 @@ describe("Error in ", function () {
 
             expect( () => {
                 parser.parse(featureContent)
-            }).toThrowError("Repeated Rule section at linenumber 5")
+            }).toThrowError("Unexpected section at line number 5")
             //console.log(JSON.stringify(parser.output,null,4));
         });
 
@@ -299,7 +265,7 @@ describe("Error in ", function () {
 
             expect( () => {
                 parser.parse(featureContent)
-            }).toThrowError("Rule at linenumber 3 before Feature section")
+            }).toThrowError("Feature section was expected at line number 3")
             //console.log(JSON.stringify(parser.output,null,4));
         });
 
@@ -318,7 +284,7 @@ describe("Error in ", function () {
 
             expect( () => {
                 parser.parse(featureContent)
-            }).toThrowError("Rule section must not have tags, at linenumber 4")
+            }).toThrowError("Tags are not expected for Rule section at linenumber 3")
             //console.log(JSON.stringify(parser.output,null,4));
         });
 
@@ -338,7 +304,7 @@ describe("Error in ", function () {
 
             expect( () => {
                 parser.parse(featureContent)
-            }).toThrowError("Unexpected Rule section at linenumber 9")
+            }).toThrowError("Unexpected Rule section at line number 8")
             //console.log(JSON.stringify(parser.output,null,4));
         });
         
@@ -361,8 +327,8 @@ describe("Error in ", function () {
             `;
 
             expect( () => {
-                parser.parse(featureContent)
-            }).toThrowError("Unexpected Rule section at linenumber 9")
+                parser.parse(featureContent);
+            }).toThrowError("Unexpected Rule section at line number 8")
             //console.log(JSON.stringify(parser.output,null,4));
         });
     });
@@ -386,8 +352,8 @@ describe("Error in ", function () {
             try{
                 parser.parse(featureContent)
             }catch(e){
-                expect(e.message).toBe("Only data table or doc string is allowed for step at line number 5");
-                expect(e.lineNumber).toBe(5);
+                expect(e.message).toBe("DocString is not expected at line number 6");
+                expect(e.lineNumber).toBe(6);
             }
             //console.log(JSON.stringify(parser.output,null,4));
         });
