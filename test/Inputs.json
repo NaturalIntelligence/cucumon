@@ -1,0 +1,145 @@
+{
+    "feature": {
+        "keyword": "Feature",
+        "description": "",
+        "statement": "Special Characters",
+        "lineNumber": 1,
+        "tags": [],
+        "rules": [
+            {
+                "keyword": "Rule",
+                "statement": "__default",
+                "scenarios": [
+                    {
+                        "keyword": "Scenario Template",
+                        "statement": "scenario outline",
+                        "description": "",
+                        "lineNumber": 3,
+                        "id": 1,
+                        "steps": [
+                            {
+                                "keyword": "Given",
+                                "statement": "an example",
+                                "lineNumber": 4,
+                                "arg": null
+                            },
+                            {
+                                "keyword": "And",
+                                "statement": "I can pass \"\" with spceial characters",
+                                "lineNumber": 5,
+                                "arg": null
+                            }
+                        ],
+                        "tags": []
+                    },
+                    {
+                        "keyword": "Scenario Template",
+                        "statement": "scenario outline",
+                        "description": "",
+                        "lineNumber": 3,
+                        "id": 1,
+                        "steps": [
+                            {
+                                "keyword": "Given",
+                                "statement": "an example",
+                                "lineNumber": 4,
+                                "arg": null
+                            },
+                            {
+                                "keyword": "And",
+                                "statement": "I can pass \"new\\nline\\ttab\\b\" with spceial characters",
+                                "lineNumber": 5,
+                                "arg": null
+                            }
+                        ],
+                        "tags": []
+                    },
+                    {
+                        "keyword": "Scenario Template",
+                        "statement": "scenario outline",
+                        "description": "",
+                        "lineNumber": 3,
+                        "id": 1,
+                        "steps": [
+                            {
+                                "keyword": "Given",
+                                "statement": "an example",
+                                "lineNumber": 4,
+                                "arg": null
+                            },
+                            {
+                                "keyword": "And",
+                                "statement": "I can pass \"left|right|\" with spceial characters",
+                                "lineNumber": 5,
+                                "arg": null
+                            }
+                        ],
+                        "tags": []
+                    },
+                    {
+                        "keyword": "Example",
+                        "statement": "data table, doc string and special chars",
+                        "description": "",
+                        "lineNumber": 16,
+                        "id": 2,
+                        "steps": [
+                            {
+                                "keyword": "Given",
+                                "statement": "a scenario",
+                                "lineNumber": 17,
+                                "arg": [
+                                    [
+                                        "with",
+                                        "single",
+                                        "data table",
+                                        "line"
+                                    ]
+                                ]
+                            },
+                            {
+                                "keyword": "When",
+                                "statement": "I pass data table",
+                                "lineNumber": 19,
+                                "arg": [
+                                    [
+                                        "",
+                                        "empty"
+                                    ],
+                                    [
+                                        "new\\nline\\ttab\\b",
+                                        "with backslash chars"
+                                    ],
+                                    [
+                                        "left|right|",
+                                        "with pipe sign",
+                                        "extra column should be skipped"
+                                    ]
+                                ]
+                            },
+                            {
+                                "keyword": "And",
+                                "statement": "I can also pass a doc string",
+                                "lineNumber": 24,
+                                "arg": "This text will be trimmed from starting and \\tend\n| with pipe\n# with hash\nFeature: something\nand \"\"\" are allowed in between \"",
+                                "argInstruction": "no format; single line;"
+                            },
+                            {
+                                "keyword": "And",
+                                "statement": "I can give \"  \" in quotes",
+                                "lineNumber": 33,
+                                "arg": null
+                            },
+                            {
+                                "keyword": "And",
+                                "statement": "I can pass 😀 unicode",
+                                "lineNumber": 34,
+                                "arg": null
+                            }
+                        ],
+                        "tags": []
+                    }
+                ]
+            }
+        ]
+    }
+}

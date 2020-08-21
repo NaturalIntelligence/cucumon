@@ -61,18 +61,27 @@ function splitOnPipe(str){
   return result;
 }
 
-function splitExampleHeader(str){
+function splitExampleHeader(str, lineNumber){
   const splittedArr = str.split("|");
   const result = new Array(splittedArr.length - 2);
   for(let i = 1; i < splittedArr.length - 1; i++){
-    result[i - 1] = "<"+splittedArr[i].trim() + ">";
-    if(result[i - 1] === "<>"){
-      throw new Error("Examples header should not be blank");
+    const headerName = splittedArr[i].trim();
+    if(headerName.length === 0){
+      throw new Error("Examples header should not be blank at line number" + lineNumber, lineNumber);
+    }else{
+      result[i - 1] = new RegExp("<"+splittedArr[i].trim() + ">", "g");
     }
   }
   return result;
 }
 
+function cloneArr(arr){
+  const newArr = Array(arr.length);
+  for(let i=0; i<arr.length; i++){
+    newArr[i] = arr[i];
+  }
+  return newArr;
+}
 /**
  * Split a string on given delimeter and trim the values.
  * Automatically skip backslashed char
@@ -109,3 +118,4 @@ exports.splitExampleHeader = splitExampleHeader;
 exports.splitInObject = splitInObject;
 exports.getAllMatches = getAllMatches;
 exports.getAllRawMatches = getAllRawMatches;
+exports.cloneArr = cloneArr;

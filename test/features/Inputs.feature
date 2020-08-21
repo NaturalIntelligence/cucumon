@@ -13,8 +13,7 @@ Feature: Special Characters
         #pipe
         | left\|right\|  |
     
-    @focus
-    Scenario: data table, doc string and special chars
+    Example: data table, doc string and special chars
         Given a scenario
             |with|single|data table|line|
         When I pass data table
@@ -31,6 +30,5 @@ Feature: Special Characters
             Feature: something
             and """ are allowed in between "
             """
-        And I can specify a step
         And I can give "  " in quotes
         And I can pass 😀 unicode
