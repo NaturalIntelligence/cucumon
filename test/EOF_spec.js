@@ -1,5 +1,4 @@
 const FeatureFileParser = require('../src/FeatureFileParser');
-var strToStream = require('string-to-stream')
 /*
 Check for
 * last step line

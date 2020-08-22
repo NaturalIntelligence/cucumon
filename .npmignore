@@ -2,7 +2,6 @@
 benchmark
 coverage
 test
-!src/read.js
 static
 .*
 index.html
@@ -11,3 +10,4 @@ lib
 temp*
 *todo.md
 docs*
+TODO.md

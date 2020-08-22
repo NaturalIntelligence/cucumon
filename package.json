@@ -1,6 +1,6 @@
 {
   "name": "cucumon",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Cucumber Gherkin Feature file parser with custom additional features",
   "main": "src/FeatureFileParser.js",
   "scripts": {

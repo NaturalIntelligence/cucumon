@@ -1,4 +1,3 @@
-const TagExpParser = require("bexp");
 const ParsingError = require("./ParsingError");
 
 const util = require("./util.js");
@@ -18,7 +17,6 @@ class FeatureParser{
 
     constructor(options){
         this.options = Object.assign( { clubBgSteps: false }, options );
-        this.tagExpParser = new TagExpParser(this.options.tagExpression);
     }
 
     _resetParameters(){
