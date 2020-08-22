@@ -1,30 +1,5 @@
 'use strict';
 
-const getAllMatches = function(string, regex) {
-  const matches = [];
-  let match = regex.exec(string);
-  while (match) {
-    const allmatches = [];
-    const len = match.length;
-    for (let index = 0; index < len; index++) {
-      allmatches.push(match[index]);
-    }
-    matches.push(allmatches);
-    match = regex.exec(string);
-  }
-  return matches;
-};
-
-const getAllRawMatches = function(string, regex) {
-  const matches = [];
-  let match = regex.exec(string);
-  while (match) {
-    matches.push(match);
-    match = regex.exec(string);
-  }
-  return matches;
-};
-
 /**
  * Split a string on given delimeter and trim the values.
  * Automatically skip backslashed char
@@ -75,13 +50,6 @@ function splitExampleHeader(str, lineNumber){
   return result;
 }
 
-function cloneArr(arr){
-  const newArr = Array(arr.length);
-  for(let i=0; i<arr.length; i++){
-    newArr[i] = arr[i];
-  }
-  return newArr;
-}
 /**
  * Split a string on given delimeter and trim the values.
  * Automatically skip backslashed char
@@ -116,6 +84,3 @@ exports.splitOn = splitOn;
 exports.splitOnPipe = splitOnPipe;
 exports.splitExampleHeader = splitExampleHeader;
 exports.splitInObject = splitInObject;
-exports.getAllMatches = getAllMatches;
-exports.getAllRawMatches = getAllRawMatches;
-exports.cloneArr = cloneArr;
