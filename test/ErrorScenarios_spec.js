@@ -108,6 +108,40 @@ describe("Error in ", function () {
             }).toThrowError("Unexpected section at line number 5")
 
         });
+        
+        it("should throw error when scenario outline examples has no data row", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `Feature: Overdue tasks
+
+                Scenario Outline: breaks string for " "
+                    Given a step
+
+                    Examples:
+                    | heading |
+            `;
+    
+            expect( () => {
+                parser.parse(featureContent)
+            }).toThrowError("Insufficient rows in Examples at line number 6")
+
+        });
+        
+        it("should throw error when scenario outline with missing Examples", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `Feature: Overdue tasks
+
+                Scenario Outline: breaks string for " "
+                    Given a step
+
+                Scenario: unexpected
+                    Given a step
+            `;
+    
+            expect( () => {
+                parser.parse(featureContent)
+            }).toThrowError("Scenario Outline Examples were expected at line number 6")
+
+        });
     });
 
 
@@ -229,6 +263,23 @@ describe("Error in ", function () {
             }).toThrowError("Unexpected section at line number 9")
             //console.log(JSON.stringify(parser.output,null,4));
         });
+
+        it("should throw error when no section after background section", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `Feature: Overdue tasks
+
+            Background: in last
+                Given this is correct
+
+            #Example: Already used today
+
+            `;
+
+            expect( () => {
+                parser.parse(featureContent);
+            }).toThrowError("Unexpected Background section at the end of the file")
+            //console.log(JSON.stringify(parser.output,null,4));
+        });
     });
     
     describe("Rule", function () {
@@ -331,6 +382,22 @@ describe("Error in ", function () {
             }).toThrowError("Unexpected Rule section at line number 8")
             //console.log(JSON.stringify(parser.output,null,4));
         });
+        
+        it("should throw error when no section after rule section", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `Feature: Overdue tasks
+
+            Rule: in last
+
+            #Example: Already used today
+
+            `;
+
+            expect( () => {
+                parser.parse(featureContent);
+            }).toThrowError("Unexpected Rule section at the end of the file")
+            //console.log(JSON.stringify(parser.output,null,4));
+        });
     });
 
     describe("Inputs", function () {
@@ -357,5 +424,21 @@ describe("Error in ", function () {
             }
             //console.log(JSON.stringify(parser.output,null,4));
         });
+    });
+
+    describe("Others", function () {
+
+        it("should throw error when empty feature file content", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `
+                `;
+            try{
+                parser.parse(featureContent)
+            }catch(e){
+                expect(e.message).toBe("Feature section is not found");
+            }
+            //console.log(JSON.stringify(parser.output,null,4));
+        });
+        
     });
 });

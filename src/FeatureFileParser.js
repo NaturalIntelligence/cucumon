@@ -2,7 +2,6 @@ const TagExpParser = require("bexp");
 const ParsingError = require("./ParsingError");
 
 const util = require("./util.js");
-const Feature = require("./sections/Feature");
 const Rule = require("./sections/Rule");
 const Scenario = require("./sections/Scenario");
 const Background = require("./sections/Background");
@@ -24,7 +23,6 @@ class FeatureParser{
 
     _resetParameters(){
         this.lineNumber = 0;
-        this.outline = false;
         this.result = {};
         this.scenarioCount = 1;
         this.tags = [];
@@ -126,14 +124,13 @@ class FeatureParser{
      Section: statement
      *
      */
-    readBeginingOfASection(regex, tagAllowed = true){
+    readBeginingOfASection(regex){
         this.tags = [];
         this.section = {};
         for(;this.lineNumber < this.lines.length; this.lineNumber++){
             let line = this.lines[this.lineNumber].trim();
             if( line.length === 0 || line[0] === '#' ) continue;
             else if( line[0] === '@'){
-                if(!tagAllowed) throw new Error("Tags are not expected at line number " + this.lineNumber);
                 this.recordTags(line);
             }else{
                 let sRegex = sectionRegex;
@@ -383,12 +380,12 @@ class FeatureParser{
                 }
             }
             if(examplesTable.length <2){
-                throw new ParsingError("Insufficient rows in Examples at line number " + startingLineNumber, startingLineNumber)
+                throw new ParsingError("Insufficient rows in Examples at line number " + (startingLineNumber+1), startingLineNumber+1)
             }else{
                 return examplesTable;
             }
         }else{
-            throw new ParsingError("Scenario Outline Examples were expected at line number " + this.lineNumber, this.lineNumber);
+            throw new ParsingError("Scenario Outline Examples were expected at line number " + (this.lineNumber+1), this.lineNumber+1);
         }
     }
 
@@ -397,11 +394,6 @@ class FeatureParser{
     }
 
     eofValidation(){
-        if(this.scenarioCount === 0 ){
-            throw  new ParsingError( "No Scenario/Example found");
-        }else if(this.outline){
-            throw  new ParsingError( "Scenario Outline/Template without Examples at the end of the file")
-        }
     }
 }
 
