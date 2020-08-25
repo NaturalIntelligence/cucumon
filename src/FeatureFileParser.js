@@ -364,7 +364,7 @@ class FeatureParser{
             const startingLineNumber = this.lineNumber;
             for(this.lineNumber++;this.lineNumber < this.lines.length; this.lineNumber++){
                 const line = this.lines[this.lineNumber].trim();
-                if(line[0] === '#')continue;
+                if(line.length === 0 || line[0] === '#')continue;
                 else if(line[0] === '|'){
                     if(examplesTable.length === 0 ){
                         //split Header Row
