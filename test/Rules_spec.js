@@ -93,21 +93,47 @@ describe("Rule", function () {
                         "description": "",
                         "lineNumber": 5,
                         "id": 1,
-                        "steps": [
+                        "tags": [ "@one" ],
+                        "expanded": [
                             {
-                                "keyword": "When",
-                                "statement": "I pass \"a b c\" and \" \"",
-                                "lineNumber": 6,
-                                "arg": null
-                            },
-                            {
-                                "keyword": "Then",
-                                "statement": "I get [\"a\",\"b\",\"c\"]",
-                                "lineNumber": 9,
-                                "arg": null
+                                "keyword": "Scenario Outline",
+                                "statement": "breaks string",
+                                "description": "",
+                                "lineNumber": 5,
+                                "id": 1,
+                                "steps": [
+                                    {
+                                        "keyword": "When",
+                                        "statement": "I pass \"a b c\" and \" \"",
+                                        "lineNumber": 6,
+                                        "arg": null
+                                    },
+                                    {
+                                        "keyword": "Then",
+                                        "statement": "I get [\"a\",\"b\",\"c\"]",
+                                        "lineNumber": 9,
+                                        "arg": null
+                                    }
+                                ],
+                                "tags": [ "@one" ],
+                                "examplesLineNumber": [
+                                    13
+                                ]
                             }
                         ],
-                        "tags": [ "@one" ]
+                        examples: [{ 
+                            "lineNumber": 11,
+                            "rows":[
+                                {
+                                    "lineNumber": 12,
+                                    "regex": [ {}, {} ],
+                                    "cells": [ "string", "delimeter" ]
+                                }, {
+                                    "lineNumber": 13,
+                                    "cells": [ "a,b,c", "," ]
+                                }
+                            ]
+                        }]
                     }]
                 }]
             }

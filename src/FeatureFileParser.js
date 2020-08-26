@@ -3,8 +3,10 @@ const ParsingError = require("./ParsingError");
 const util = require("./util.js");
 const Rule = require("./sections/Rule");
 const Scenario = require("./sections/Scenario");
+const ScenarioOutline = require("./sections/ScenarioOutline");
 const Background = require("./sections/Background");
 const Step = require("./sections/Step");
+const defaultExpander = require("./DefaultExpander");
 
 const stepsRegex = new RegExp("^(Given|When|Then|And|But)\\s+(.*)")
 const sectionRegex = new RegExp("\\s*(Scenario|Example|Scenario Outline|Scenario Template|Background|Rule)\\s*:(.*)")
@@ -17,6 +19,11 @@ class FeatureParser{
 
     constructor(options){
         this.options = Object.assign( { clubBgSteps: false }, options );
+        this.outlineExpanders = [];
+    }
+
+    registerOutlineExpander(expander){
+        this.outlineExpanders.push(expander);
     }
 
     _resetParameters(){
@@ -186,61 +193,34 @@ class FeatureParser{
             const scenario = this.readScenario();
             scenarios.push(scenario);
         }else if(section === "Scenario Outline" || section === "Scenario Template"){
-            const scenarioOutline = this.readScenario();
-            if(scenarioOutline.steps.length === 0) throw new ParsingError("No step is found for " + section + " at line number " + scenario.lineNumber, scenario.lineNumber);
-            const examples = this.readExamples();
-            for(let i=1; i<examples.length; i++){ //for each example row
-                let scenarioStatement = this.resolveWithExample(scenarioOutline.statement, examples, i);
-                const steps = Array(scenarioOutline.steps.length);
+            const template = this.readScenario();
 
-                for(let j=0; j< scenarioOutline.steps.length; j++){//for each step
-                    const step = new Step(scenarioOutline.steps[j].keyword
-                        , this.resolveWithExample(scenarioOutline.steps[j].statement, examples, i)
-                        , scenarioOutline.steps[j].lineNumber
-                        , scenarioOutline.steps[j].scenarioId);
-                    
-                    if(scenarioOutline.steps[j].arg){
-                        if(typeof scenarioOutline.steps[j].arg === "string"){//doc string
-                            step.arg = this.resolveWithExample(scenarioOutline.steps[j].arg, examples, i);
-                        }else{//dataTable
-                            step.arg = this.resolveDataTableWithExample(scenarioOutline.steps[j].arg, examples, i);
-                        }
-                        if(scenarioOutline.steps[j].argInstruction && scenarioOutline.steps[j].argInstruction.length > 0) step.argInstruction = scenarioOutline.steps[j].argInstruction;
-                    }
-                    steps[j] = step;
-                }
-                //create new scenario
-                const scenario = new Scenario(scenarioOutline.id, scenarioOutline.keyword, scenarioStatement, scenarioOutline.lineNumber);
-                scenario.description = scenarioOutline.description;
-                scenario.steps = steps;
-                scenario.tags = scenarioOutline.tags;
-                if(scenarioOutline.instruction) scenario.instruction = scenarioOutline.instruction;
+            const scenarioOutline = new ScenarioOutline(template.id, template.keyword, template.statement, template.lineNumber);
+            scenarioOutline.description = template.description;
+            scenarioOutline.tags = template.tags;
+            this.currentRule().scenarios.push(scenarioOutline);
 
-                this.currentRule().scenarios.push(scenario);
+            if(template.steps.length === 0) throw new ParsingError("No step is found for " + section + " at line number " + scenario.lineNumber, scenario.lineNumber);
+            
+            const examples = this.readListOfExamples();
+            scenarioOutline.examples = examples;
+
+            let scenarios;
+            for (let i = 0; i < this.outlineExpanders.length; i++) {
+                scenarios = this.outlineExpanders[i](template, examples);
+                if(!scenarios) continue;
             }
+
+            if(!scenarios){
+                scenarios = defaultExpander(template, examples);
+            }
+            scenarioOutline.expanded = scenarios;
+            
         }else if(this.lineNumber === this.lines.length){
             throw new ParsingError("Unexpected section at the end of the file", this.section.lineNumber);
         }else{
             throw new ParsingError("Unexpected section at line number " + (this.section.lineNumber+1), this.section.lineNumber+1);
         }
-    }
-
-    resolveDataTableWithExample(dtable, exampleTable, rowIndex){
-        for(let i=0; i<dtable.length; i++){
-          for(let j=0; j<dtable[i].length; j++){
-            dtable[i][j] = this.resolveWithExample(dtable[i][j], exampleTable, rowIndex);
-          }
-        }
-        return dtable;
-    }
-
-    resolveWithExample(str, exampleTable, rowIndex){
-        const exampleHeaderRow = exampleTable[0];
-        const exampleDataRow = exampleTable[rowIndex];
-        for(let col=0; col<exampleDataRow.length; col++){ // for each column in example row
-            str = str.replace(exampleHeaderRow[col], exampleDataRow[col]);
-        }
-        return str;
     }
 
     readScenario(){
@@ -354,36 +334,62 @@ class FeatureParser{
         if(this.instruction) this.currentStep.argInstruction = this.instruction;
     }
 
-    readExamples(){
-        let sectionLine = this.lines[this.lineNumber];
-        if(!sectionLine) throw new ParsingError("Examples section was expected but reached to EOL", this.lineNumber);
-        sectionLine = sectionLine.trim();
-        if(sectionLine.match(examplesRegex)){
-            const examplesTable = [];
-            let examplesCount=0;
-            const startingLineNumber = this.lineNumber;
-            for(this.lineNumber++;this.lineNumber < this.lines.length; this.lineNumber++){
-                const line = this.lines[this.lineNumber].trim();
-                if(line.length === 0 || line[0] === '#')continue;
-                else if(line[0] === '|'){
-                    if(examplesTable.length === 0 ){
-                        //split Header Row
-                        examplesTable[examplesCount++] = util.splitExampleHeader(line);
-                    }else{
-                        //split Data row
-                        examplesTable[examplesCount++] = util.splitOnPipe(line);
-                    }
-                }else{
-                    break;
-                }
-            }
-            if(examplesTable.length <2){
-                throw new ParsingError("Insufficient rows in Examples at line number " + (startingLineNumber+1), startingLineNumber+1)
+    readListOfExamples(){
+        //read instruction
+        const listOfExamples = [];
+        for(this.lineNumber;this.lineNumber < this.lines.length; this.lineNumber++){
+            let line = this.lines[this.lineNumber];
+            if(line) line = line.trim();
+
+            if(line[0] === '#' && line[1] === '>') this.instruction = line;
+            else if(line.length === 0 || line[0] === '#')continue;
+            else if(line.match(examplesRegex)){
+                const examplesTable = this.readExamples();
+                if(this.instruction) examplesTable.instruction = this.instruction;
+                listOfExamples.push(examplesTable);
+                this.instruction = "";
+                this.lineNumber--;
             }else{
-                return examplesTable;
+                break;
             }
-        }else{
+        }
+        if(listOfExamples.length === 0){
             throw new ParsingError("Scenario Outline Examples were expected at line number " + (this.lineNumber+1), this.lineNumber+1);
+        }
+        
+        return listOfExamples;
+    }
+    readExamples(){
+        const example = {
+            lineNumber: this.lineNumber+1,
+            rows: []
+        }
+        const startingLineNumber = this.lineNumber;
+        for(this.lineNumber++;this.lineNumber < this.lines.length; this.lineNumber++){
+            const line = this.lines[this.lineNumber].trim();
+            if(line.length === 0 || line[0] === '#')continue;
+            else if(line[0] === '|'){
+                const row = {
+                    lineNumber: this.lineNumber + 1
+                }
+                
+                if(example.rows.length === 0 ){
+                    //split Header Row
+                    row.regex = util.splitExampleHeader(line);
+                    row.cells = util.splitOnPipe(line);
+                }else{
+                    //split Data row
+                    row.cells = util.splitOnPipe(line);
+                }
+                example.rows.push(row);
+            }else{
+                break;
+            }
+        }
+        if(example.rows.length <2){
+            throw new ParsingError("Insufficient rows in Examples at line number " + (startingLineNumber+1), startingLineNumber+1)
+        }else{
+            return example;
         }
     }
 

@@ -2,7 +2,7 @@
     "feature": {
         "keyword": "Feature",
         "description": "",
-        "statement": "Special Characters",
+        "statement": "Senario Outline",
         "lineNumber": 1,
         "tags": [],
         "rules": [
@@ -39,7 +39,7 @@
                                 ],
                                 "tags": [],
                                 "examplesLineNumber": [
-                                    10
+                                    11
                                 ]
                             },
                             {
@@ -57,14 +57,14 @@
                                     },
                                     {
                                         "keyword": "And",
-                                        "statement": "I can pass \"new\\nline\\ttab\\b\" with spceial characters",
+                                        "statement": "I can pass \"<data>\" with spceial characters",
                                         "lineNumber": 5,
                                         "arg": null
                                     }
                                 ],
                                 "tags": [],
                                 "examplesLineNumber": [
-                                    12
+                                    16
                                 ]
                             },
                             {
@@ -82,24 +82,24 @@
                                     },
                                     {
                                         "keyword": "And",
-                                        "statement": "I can pass \"left|right|\" with spceial characters",
+                                        "statement": "I can pass \"<data>\" with spceial characters",
                                         "lineNumber": 5,
                                         "arg": null
                                     }
                                 ],
                                 "tags": [],
                                 "examplesLineNumber": [
-                                    14
+                                    18
                                 ]
                             }
                         ],
                         "tags": [],
                         "examples": [
-                            { 
-                                "lineNumber": 7,
+                            {
+                                "lineNumber": 8,
                                 "rows": [
                                     {
-                                        "lineNumber": 8,
+                                        "lineNumber": 9,
                                         "regex": [
                                             {}
                                         ],
@@ -108,19 +108,34 @@
                                         ]
                                     },
                                     {
-                                        "lineNumber": 10,
+                                        "lineNumber": 11,
                                         "cells": [
                                             ""
                                         ]
+                                    }
+                                ],
+                                "instruction": "instruction"
+                            },
+                            {
+                                "lineNumber": 13,
+                                "rows": [
+                                    {
+                                        "lineNumber": 14,
+                                        "regex": [
+                                            {}
+                                        ],
+                                        "cells": [
+                                            "content"
+                                        ]
                                     },
                                     {
-                                        "lineNumber": 12,
+                                        "lineNumber": 16,
                                         "cells": [
                                             "new\\nline\\ttab\\b"
                                         ]
                                     },
                                     {
-                                        "lineNumber": 14,
+                                        "lineNumber": 18,
                                         "cells": [
                                             "left|right|"
                                         ]
@@ -128,68 +143,6 @@
                                 ]
                             }
                         ]
-                    },
-                    {
-                        "keyword": "Example",
-                        "statement": "data table, doc string and special chars",
-                        "description": "",
-                        "lineNumber": 16,
-                        "id": 2,
-                        "steps": [
-                            {
-                                "keyword": "Given",
-                                "statement": "a scenario",
-                                "lineNumber": 17,
-                                "arg": [
-                                    [
-                                        "with",
-                                        "single",
-                                        "data table",
-                                        "line"
-                                    ]
-                                ]
-                            },
-                            {
-                                "keyword": "When",
-                                "statement": "I pass data table",
-                                "lineNumber": 19,
-                                "arg": [
-                                    [
-                                        "",
-                                        "empty"
-                                    ],
-                                    [
-                                        "new\\nline\\ttab\\b",
-                                        "with backslash chars"
-                                    ],
-                                    [
-                                        "left|right|",
-                                        "with pipe sign",
-                                        "extra column should be skipped"
-                                    ]
-                                ]
-                            },
-                            {
-                                "keyword": "And",
-                                "statement": "I can also pass a doc string",
-                                "lineNumber": 24,
-                                "arg": "This text will be trimmed from starting and \\tend\n| with pipe\n# with hash\nFeature: something\nand \"\"\" are allowed in between \"",
-                                "argInstruction": "no format; single line;"
-                            },
-                            {
-                                "keyword": "And",
-                                "statement": "I can give \"  \" in quotes",
-                                "lineNumber": 33,
-                                "arg": null
-                            },
-                            {
-                                "keyword": "And",
-                                "statement": "I can pass 😀 unicode",
-                                "lineNumber": 34,
-                                "arg": null
-                            }
-                        ],
-                        "tags": []
                     }
                 ]
             }

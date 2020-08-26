@@ -65,7 +65,7 @@ describe("Error in ", function () {
     
             expect( () => {
                 parser.parse(featureContent);
-            }).toThrowError("Examples section was expected but reached to EOL")
+            }).toThrowError("Scenario Outline Examples were expected at line number 7");
 
         });
 

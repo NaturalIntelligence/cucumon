@@ -144,5 +144,36 @@ You can set `clubBgSteps: true` to club background steps with scenario steps.
 
 Check [sample](test/Inputs.json) parsed response for better idea;
 
-* Read [documentation](./documentation.md) for more detail.
+### Additional Features
+
+* Cucumon supports multiple examples
+* You can use your own logic to generate scenarios for scenario outline
+
+```feature
+Feature: Matrix Outliner
+
+    Scenario Template: Matrix example
+        Given an example 
+        And I can Multiply <a> with <b>
+
+        #> matrix: row 1
+        Examples:
+        | a |
+        | 3 |
+
+        #> matrix: row 2
+        Examples:
+        | b |
+        | 4 |
+```
+
+Note that `#>` is a special statment considered as instruction statement. You'll get it's value as `outline.examples[0].instruction`.
+
+```js
+const cucumon = new Cucumon({clubBgSteps: false});
+cucumon.registerOutlineExpander((outline) => {});
+```
+
+### Other
+
 * Check [bexp](https://github.com/NaturalIntelligence/bexp/) to evaluate tag expression.
