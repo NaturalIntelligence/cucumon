@@ -151,7 +151,7 @@ class FeatureParser{
                     this.lineNumber++; //skip the current line as already read;
                     return true;
                 }else{
-                    throw new Error("Unexpeted line at line number " + this.lineNumber)
+                    throw new ParsingError("Unexpeted line at line number " + (this.lineNumber+1), this.lineNumber+1);
                 }
             }
         }
@@ -381,6 +381,8 @@ class FeatureParser{
                 }else{
                     //split Data row
                     row.cells = util.splitOnPipe(line);
+                    if(row.cells.length !== example.rows[0].length)
+                        throw new ParsingError("Cells count mismatch at line number " + (this.lineNumber+1), this.lineNumber+1)
                 }
                 example.rows.push(row);
             }else{
