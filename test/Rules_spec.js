@@ -132,7 +132,8 @@ describe("Rule", function () {
                                     "lineNumber": 13,
                                     "cells": [ "a,b,c", "," ]
                                 }
-                            ]
+                            ],
+                            "tags": []
                         }]
                     }]
                 }]

@@ -31,6 +31,7 @@ module.exports = function(template, examples){
             scenario.steps = steps;
             scenario.tags = template.tags;
             scenario.examplesLineNumber = [examplesTable[i].lineNumber];
+            scenario.tags = examples[table_i].tags.concat(template.tags);
             if(template.instruction) scenario.instruction = template.instruction;
 
             scenarios.push(scenario);

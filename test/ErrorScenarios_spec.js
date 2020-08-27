@@ -142,6 +142,26 @@ describe("Error in ", function () {
             }).toThrowError("Scenario Outline Examples were expected at line number 6")
 
         });
+
+        it("should throw error when cell count doesn't match", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `Feature: Overdue tasks
+
+                Scenario Outline: breaks string for " "
+                    Given a step
+
+                    Examples:
+                    |only|header|
+                    |with value|
+            `;
+    
+            expect( () => {
+                parser.parse(featureContent)
+            }).toThrowError("Cells count mismatch at line number 8");
+
+        });
+
+        
     });
 
 
@@ -239,7 +259,7 @@ describe("Error in ", function () {
 
             expect( () => {
                 parser.parse(featureContent)
-            }).toThrowError("Tags are not expected for Background section at linenumber 3")
+            }).toThrowError("Tags are not expected for Background section at line number 3")
             //console.log(JSON.stringify(parser.output,null,4));
         });
 
@@ -335,7 +355,7 @@ describe("Error in ", function () {
 
             expect( () => {
                 parser.parse(featureContent)
-            }).toThrowError("Tags are not expected for Rule section at linenumber 3")
+            }).toThrowError("Tags are not expected for Rule section at line number 3")
             //console.log(JSON.stringify(parser.output,null,4));
         });
 
@@ -416,11 +436,14 @@ describe("Error in ", function () {
                 Then I am not notified about overdue tasks
             `;
 
+            let err;
             try{
                 parser.parse(featureContent)
             }catch(e){
-                expect(e.message).toBe("DocString is not expected at line number 6");
-                expect(e.lineNumber).toBe(6);
+                err = e;
+            }finally{
+                expect(err.message).toBe("DocString is not expected at line number 6");
+                expect(err.lineNumber).toBe(6);
             }
             //console.log(JSON.stringify(parser.output,null,4));
         });
@@ -432,11 +455,56 @@ describe("Error in ", function () {
             const parser = new FeatureFileParser();
             const featureContent = `
                 `;
-            try{
-                parser.parse(featureContent)
-            }catch(e){
-                expect(e.message).toBe("Feature section is not found");
-            }
+            expect(()=>{
+                parser.parse(featureContent);
+            }).toThrowError("Feature section is not found");
+            //console.log(JSON.stringify(parser.output,null,4));
+        });
+
+        it("should throw error when invalid line in starting ", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `
+            invalid line
+            Feature: invalid
+
+            Scenario: again invalid
+                Given this step
+                `;
+            expect(()=>{
+                parser.parse(featureContent);
+            }).toThrowError("Unexpeted line at line number 2");
+            //console.log(JSON.stringify(parser.output,null,4));
+        });
+        
+        it("should throw error when invalid line in end", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `
+            Feature: invalid
+
+            Scenario: again invalid
+                Given this step
+            
+                invalid line
+                `;
+            expect(()=>{
+                parser.parse(featureContent);
+            }).toThrowError("Unexpeted line at line number 7");
+            //console.log(JSON.stringify(parser.output,null,4));
+        });
+
+        it("should throw error when invalid line in end", function() {
+            const parser = new FeatureFileParser();
+            const featureContent = `
+            Feature: invalid
+
+            Scenario: again invalid
+                Given this step
+                invalid line
+                Then I don't reach here
+                `;
+            expect(()=>{
+                parser.parse(featureContent);
+            }).toThrowError("Unexpeted line at line number 6");
             //console.log(JSON.stringify(parser.output,null,4));
         });
         

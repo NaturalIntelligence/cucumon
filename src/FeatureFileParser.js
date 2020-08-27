@@ -69,6 +69,7 @@ class FeatureParser{
                     rules: []
                 }
             }
+            this.tags = [];//tags are reset once consumed
         }
     }
 
@@ -96,7 +97,7 @@ class FeatureParser{
 
     validateTags(){
         if(this.tags.length > 0){
-            throw  new ParsingError("Tags are not expected for "+ this.section.keyword +" section at linenumber " + this.section.lineNumber, this.section.lineNumber);
+            throw  new ParsingError("Tags are not expected for "+ this.section.keyword +" section at line number " + this.section.lineNumber, this.section.lineNumber);
         }
     }
 
@@ -130,13 +131,13 @@ class FeatureParser{
      *
      */
     readBeginingOfASection(regex){
-        this.tags = [];
+        //this.tags = [];
         this.section = {};
         for(;this.lineNumber < this.lines.length; this.lineNumber++){
             let line = this.lines[this.lineNumber].trim();
             if( line.length === 0 || line[0] === '#' ) continue;
             else if( line[0] === '@'){
-                this.recordTags(line);
+                this.tags = this.tags.concat(this.breakIntoTags(line));
             }else{
                 let sRegex = sectionRegex;
                 if(regex) sRegex = regex;
@@ -151,7 +152,7 @@ class FeatureParser{
                     this.lineNumber++; //skip the current line as already read;
                     return true;
                 }else{
-                    throw new Error("Unexpeted line at line number " + this.lineNumber)
+                    throw new ParsingError("Unexpeted line at line number " + (this.lineNumber+1), this.lineNumber+1);
                 }
             }
         }
@@ -236,6 +237,7 @@ class FeatureParser{
         steps = steps.concat(this.readSteps());
         scenario.steps = steps;
         scenario.tags = this.tags;
+        this.tags = [];
         return scenario;
     }
 
@@ -335,17 +337,20 @@ class FeatureParser{
     }
 
     readListOfExamples(){
-        //read instruction
         const listOfExamples = [];
         for(this.lineNumber;this.lineNumber < this.lines.length; this.lineNumber++){
             let line = this.lines[this.lineNumber];
             if(line) line = line.trim();
 
             if(line[0] === '#' && line[1] === '>') this.instruction = line;
-            else if(line.length === 0 || line[0] === '#')continue;
+            else if(line[0] === '@') {
+                this.tags = this.tags.concat(this.breakIntoTags(line));
+            }else if(line.length === 0 || line[0] === '#')continue;
             else if(line.match(examplesRegex)){
                 const examplesTable = this.readExamples();
                 if(this.instruction) examplesTable.instruction = this.instruction;
+                examplesTable.tags = this.tags;
+                this.tags = [];
                 listOfExamples.push(examplesTable);
                 this.instruction = "";
                 this.lineNumber--;
@@ -380,6 +385,8 @@ class FeatureParser{
                 }else{
                     //split Data row
                     row.cells = util.splitOnPipe(line);
+                    if(row.cells.length !== example.rows[0].cells.length)
+                        throw new ParsingError("Cells count mismatch at line number " + (this.lineNumber+1), this.lineNumber+1)
                 }
                 example.rows.push(row);
             }else{
@@ -393,11 +400,26 @@ class FeatureParser{
         }
     }
 
-    recordTags(line){
-        this.tags = this.tags.concat(line.split(/\s+/));
+    breakIntoTags(line){
+        const commentIndex = line.indexOf(" #");
+        if(commentIndex > -1){ //remove comment
+            line = line.substr(0, commentIndex);
+        }
+
+        let tags=[];
+        const tokens = line.split(/\s+/);
+        for(let i=0; i<tokens.length; i++){
+            if(tokens[i][0] !== "@") 
+                throw new ParsingError("Tags are not allowed with white spaces at line number "+ (this.lineNumber+1), this.lineNumber);
+            else tags = tags.concat(tokens[i].match(/@[^@]+/g));
+        }
+        return tags;
     }
 
     eofValidation(){
+        if(this.tags.length > 0){
+            throw new ParsingError("Unexpected line at line number " + (this.lineNumber+1), this.lineNumber+1)
+        }
     }
 }
 
