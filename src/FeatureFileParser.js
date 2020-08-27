@@ -236,6 +236,7 @@ class FeatureParser{
         steps = steps.concat(this.readSteps());
         scenario.steps = steps;
         scenario.tags = this.tags;
+        this.tags = [];
         return scenario;
     }
 
@@ -394,10 +395,25 @@ class FeatureParser{
     }
 
     recordTags(line){
-        this.tags = this.tags.concat(line.split(/\s+/));
+        const commentIndex = line.indexOf(" #");
+        if(commentIndex > -1){ //remove comment
+            line = line.substr(0, commentIndex);
+        }
+
+        this.tags=[];
+        const tags = this.tags.concat(line.split(/\s+/));
+        for(let i=0; i<tags.length; i++){
+            if(tags[i][0] !== "@") 
+                throw new ParsingError("Tags are not allowed with white spaces at line number "+ (this.lineNumber+1), this.lineNumber);
+            else this.tags = this.tags.concat(tags[i].match(/@[^@]+/g));
+        }
+
     }
 
     eofValidation(){
+        if(this.tags.length > 0){
+            throw new ParsingError("Unexpected line at line number " + (this.lineNumber+1), this.lineNumber+1)
+        }
     }
 }
 
