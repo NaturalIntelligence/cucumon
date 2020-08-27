@@ -381,7 +381,7 @@ class FeatureParser{
                 }else{
                     //split Data row
                     row.cells = util.splitOnPipe(line);
-                    if(row.cells.length !== example.rows[0].length)
+                    if(row.cells.length !== example.rows[0].cells.length)
                         throw new ParsingError("Cells count mismatch at line number " + (this.lineNumber+1), this.lineNumber+1)
                 }
                 example.rows.push(row);
