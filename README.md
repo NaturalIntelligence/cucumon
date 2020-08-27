@@ -111,13 +111,13 @@ Note the **instruction statment** `#> {}`. Instruction statments are special com
                 },
                 scenarios: [
                     {
-                        "keyword": "Scenario Template",
-                        "statement": "scenario outline",
+                        "keyword": "Scenario",
+                        "statement": "normal scenario",
                         "description": "",
                         "lineNumber": 3,
                         "id": 1,
                         "tags": [],
-                        steps: [
+                        "steps": [
                             {
                                 "keyword": "Given",
                                 "statement": "an example",
@@ -125,7 +125,49 @@ Note the **instruction statment** `#> {}`. Instruction statments are special com
                                 "arg": null
                             }
                         ]
-
+                    },{
+                        "keyword": "Scenario Template",
+                        "statement": "scenario outline",
+                        "description": "",
+                        "lineNumber": 3,
+                        "id": 1,
+                        "tags": ["@wip"],
+                        "expanded" : [
+                            {
+                                "keyword": "Scenario Template",
+                                "statement": "scenario outline",
+                                "description": "",
+                                "lineNumber": 3,
+                                "id": 1,
+                                "steps": [
+                                    {
+                                        "keyword": "Given",
+                                        "statement": "an example",
+                                        "lineNumber": 4,
+                                        "arg": null
+                                    }
+                                ],
+                                "tags": [ "@wip", "@examples" ],
+                                "examplesLineNumber": [ 19 ]
+                            }
+                        ],
+                        "examples": [
+                            {
+                                "lineNumber": 10,
+                                "rows": [
+                                    {
+                                        "lineNumber": 11,
+                                        "regex": [ {} ],
+                                        "cells": [ "data" ]
+                                    }, {
+                                        "lineNumber": 19,
+                                        "cells": [ "" ]
+                                    }
+                                ],
+                                "instruction": "instruction",
+                                "tags": [ "@examples" ]
+                            }
+                        ]
                     }
                 ]
             }

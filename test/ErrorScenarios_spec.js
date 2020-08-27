@@ -259,7 +259,7 @@ describe("Error in ", function () {
 
             expect( () => {
                 parser.parse(featureContent)
-            }).toThrowError("Tags are not expected for Background section at linenumber 3")
+            }).toThrowError("Tags are not expected for Background section at line number 3")
             //console.log(JSON.stringify(parser.output,null,4));
         });
 
@@ -355,7 +355,7 @@ describe("Error in ", function () {
 
             expect( () => {
                 parser.parse(featureContent)
-            }).toThrowError("Tags are not expected for Rule section at linenumber 3")
+            }).toThrowError("Tags are not expected for Rule section at line number 3")
             //console.log(JSON.stringify(parser.output,null,4));
         });
 

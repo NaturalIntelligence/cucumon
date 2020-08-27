@@ -14,92 +14,103 @@
                         "keyword": "Scenario Template",
                         "statement": "scenario outline",
                         "description": "",
-                        "lineNumber": 3,
+                        "lineNumber": 4,
                         "id": 1,
                         "expanded": [
                             {
                                 "keyword": "Scenario Template",
                                 "statement": "scenario outline",
                                 "description": "",
-                                "lineNumber": 3,
+                                "lineNumber": 4,
                                 "id": 1,
                                 "steps": [
                                     {
                                         "keyword": "Given",
                                         "statement": "an example",
-                                        "lineNumber": 4,
+                                        "lineNumber": 5,
                                         "arg": null
                                     },
                                     {
                                         "keyword": "And",
                                         "statement": "I can pass \"\" with spceial characters",
-                                        "lineNumber": 5,
+                                        "lineNumber": 6,
                                         "arg": null
                                     }
                                 ],
-                                "tags": [],
+                                "tags": [
+                                    "@tag",
+                                    "@parent"
+                                ],
                                 "examplesLineNumber": [
-                                    11
+                                    13
                                 ]
                             },
                             {
                                 "keyword": "Scenario Template",
                                 "statement": "scenario outline",
                                 "description": "",
-                                "lineNumber": 3,
+                                "lineNumber": 4,
                                 "id": 1,
                                 "steps": [
                                     {
                                         "keyword": "Given",
                                         "statement": "an example",
-                                        "lineNumber": 4,
+                                        "lineNumber": 5,
                                         "arg": null
                                     },
                                     {
                                         "keyword": "And",
                                         "statement": "I can pass \"<data>\" with spceial characters",
-                                        "lineNumber": 5,
+                                        "lineNumber": 6,
                                         "arg": null
                                     }
                                 ],
-                                "tags": [],
+                                "tags": [
+                                    "@wip",
+                                    "@parent"
+                                ],
                                 "examplesLineNumber": [
-                                    16
+                                    19
                                 ]
                             },
                             {
                                 "keyword": "Scenario Template",
                                 "statement": "scenario outline",
                                 "description": "",
-                                "lineNumber": 3,
+                                "lineNumber": 4,
                                 "id": 1,
                                 "steps": [
                                     {
                                         "keyword": "Given",
                                         "statement": "an example",
-                                        "lineNumber": 4,
+                                        "lineNumber": 5,
                                         "arg": null
                                     },
                                     {
                                         "keyword": "And",
                                         "statement": "I can pass \"<data>\" with spceial characters",
-                                        "lineNumber": 5,
+                                        "lineNumber": 6,
                                         "arg": null
                                     }
                                 ],
-                                "tags": [],
+                                "tags": [
+                                    "@wip",
+                                    "@parent"
+                                ],
                                 "examplesLineNumber": [
-                                    18
+                                    21
                                 ]
                             }
                         ],
-                        "tags": [],
+                        "tags": [
+                            "@parent"
+                        ],
                         "examples": [
                             {
-                                "lineNumber": 8,
+                                "lineNumber": 10,
                                 "rows": [
                                     {
-                                        "lineNumber": 9,
+                                        "lineNumber": 11,
                                         "regex": [
                                             {}
                                         ],
@@ -108,19 +119,22 @@
                                         ]
                                     },
                                     {
-                                        "lineNumber": 11,
+                                        "lineNumber": 13,
                                         "cells": [
                                             ""
                                         ]
                                     }
                                 ],
-                                "instruction": "instruction"
+                                "instruction": "instruction",
+                                "tags": [
+                                    "@tag"
+                                ]
                             },
                             {
-                                "lineNumber": 13,
+                                "lineNumber": 16,
                                 "rows": [
                                     {
-                                        "lineNumber": 14,
+                                        "lineNumber": 17,
                                         "regex": [
                                             {}
                                         ],
@@ -129,17 +143,20 @@
                                         ]
                                     },
                                     {
-                                        "lineNumber": 16,
+                                        "lineNumber": 19,
                                         "cells": [
                                             "new\\nline\\ttab\\b"
                                         ]
                                     },
                                     {
-                                        "lineNumber": 18,
+                                        "lineNumber": 21,
                                         "cells": [
                                             "left|right|"
                                         ]
                                     }
+                                ],
+                                "tags": [
+                                    "@wip"
                                 ]
                             }
                         ]
