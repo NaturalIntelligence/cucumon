@@ -214,23 +214,25 @@
                                         "keyword": "And",
                                         "statement": "for data table",
                                         "lineNumber": 53,
-                                        "arg": [
-                                            [
-                                                "a\\|b\\|c",
-                                                "\\|"
+                                        "arg": {
+                                            "content": [
+                                                [ "a\\|b\\|c", "\\|" ],
+                                                [ "a\\|b\\|c", "\\|" ]
                                             ],
-                                            [
-                                                "a\\|b\\|c",
-                                                "\\|"
-                                            ]
-                                        ],
-                                        "argInstruction": "instruction 2"
+                                            "type": "DataTable",
+                                            "instruction": "instruction 2",
+                                            "lineNumber" : 55
+                                        }
                                     },
                                     {
                                         "keyword": "And",
                                         "statement": "in docString",
                                         "lineNumber": 57,
-                                        "arg": "A string a\\|b\\|c separated by '\\|' will result in ?\nA string a\\|b\\|c separated by '\\|' will result in ?"
+                                        "arg": {
+                                            "content": "A string a\\|b\\|c separated by '\\|' will result in ?\nA string a\\|b\\|c separated by '\\|' will result in ?",
+                                            "type": "DocString",
+                                            "lineNumber" : 58
+                                        }
                                     }
                                 ],
                                 "tags": [],
@@ -261,23 +263,25 @@
                                         "keyword": "And",
                                         "statement": "for data table",
                                         "lineNumber": 53,
-                                        "arg": [
-                                            [
-                                                "a\\|b\\|c",
-                                                "\\|"
+                                        "arg": {
+                                            "content": [
+                                                [ "a\\|b\\|c", "\\|" ],
+                                                [ "a\\|b\\|c", "\\|" ]
                                             ],
-                                            [
-                                                "a\\|b\\|c",
-                                                "\\|"
-                                            ]
-                                        ],
-                                        "argInstruction": "instruction 2"
+                                            "type": "DataTable",
+                                            "instruction": "instruction 2",
+                                            "lineNumber" : 55
+                                        }
                                     },
                                     {
                                         "keyword": "And",
                                         "statement": "in docString",
                                         "lineNumber": 57,
-                                        "arg": "A string abc separated by '' will result in ?\nA string abc separated by '' will result in ?"
+                                        "arg": {
+                                            "content": "A string abc separated by '' will result in ?\nA string abc separated by '' will result in ?",
+                                            "type": "DocString",
+                                            "lineNumber" : 58
+                                        }
                                     }
                                 ],
                                 "tags": [],

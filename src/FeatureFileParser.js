@@ -311,8 +311,12 @@ class FeatureParser{
         if(this.currentStep.arg){
             throw new ParsingError("DocString is not expected at line number " + startingLineNumber, startingLineNumber)
         }
-        this.currentStep.arg = docString.join("\n");
-        if(this.instruction) this.currentStep.argInstruction = this.instruction;
+        this.currentStep.arg = {
+            content: docString.join("\n"),
+            lineNumber: startingLineNumber+1,
+            type: "DocString"
+        }
+        if(this.instruction) this.currentStep.arg.instruction = this.instruction;
     }
 
     readDataTable(){
@@ -332,8 +336,12 @@ class FeatureParser{
         }else{
             this.lineNumber--;
         }
-        this.currentStep.arg = dataTable;
-        if(this.instruction) this.currentStep.argInstruction = this.instruction;
+        this.currentStep.arg = {
+            content: dataTable,
+            lineNumber: startingLineNumber+1,
+            type: "DataTable"
+        }
+        if(this.instruction) this.currentStep.arg.instruction = this.instruction;
     }
 
     readListOfExamples(){

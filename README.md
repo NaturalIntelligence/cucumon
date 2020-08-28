@@ -122,7 +122,12 @@ Note the **instruction statment** `#> {}`. Instruction statments are special com
                                 "keyword": "Given",
                                 "statement": "an example",
                                 "lineNumber": 4,
-                                "arg": null
+                                "arg": {
+                                    "content": "some docstring",
+                                    "type": "DocString",
+                                    "lineNumber": 26,
+                                    "instruction": "no format; single line;"
+                                }
                             }
                         ]
                     },{

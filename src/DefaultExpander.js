@@ -15,13 +15,17 @@ module.exports = function(template, examples){
                     , template.steps[j].lineNumber
                     , template.steps[j].scenarioId);
                 
-                if(template.steps[j].arg){
-                    if(typeof template.steps[j].arg === "string"){//doc string
-                        step.arg = resolveWithExample(template.steps[j].arg, examplesTable, i);
+                const arg = template.steps[j].arg;
+                if(arg){
+                    step.arg = {};
+                    if(typeof arg.content === "string"){//doc string
+                        step.arg.content = resolveWithExample(arg.content, examplesTable, i);
                     }else{//dataTable
-                        step.arg = resolveDataTableWithExample(template.steps[j].arg, examplesTable, i);
+                        step.arg.content = resolveDataTableWithExample(arg.content, examplesTable, i);
                     }
-                    if(template.steps[j].argInstruction && template.steps[j].argInstruction.length > 0) step.argInstruction = template.steps[j].argInstruction;
+                    step.arg.type = arg.type;
+                    step.arg.lineNumber = arg.lineNumber;
+                    if(arg.instruction && arg.instruction.length > 0) step.arg.instruction = template.steps[j].arg.instruction;
                 }
                 steps[j] = step;
             }

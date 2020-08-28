@@ -12,7 +12,6 @@ describe("Events:", function () {
         const actual = JSON.parse(JSON.stringify(result));
         const expected = require( "./Inputs.json" );
         expect(expected).toEqual(actual);
-        //console.log(JSON.stringify(actual,null,4));
         //console.log(JSON.stringify(result,null,4));
     });
 

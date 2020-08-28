@@ -13,7 +13,6 @@ describe("Feature Sample 1", function () {
         const expected = require( "./FeatureSample1_1.json" );
         expect(expected).toEqual(actual);
         //console.log(JSON.stringify(actual,null,4));
-        //console.log(JSON.stringify(expected,null,4));
     });
 
     it("should run as expected by clubbing the bg steps", function() {
