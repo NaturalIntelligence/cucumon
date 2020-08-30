@@ -1,7 +1,7 @@
 const Step = require("./sections/Step");
 const Scenario = require("./sections/Scenario");
 
-module.exports = function(template, examples){
+module.exports = function(template, examples, insProcessor){
     const scenarios = []
     for(let table_i=0; table_i<examples.length; table_i++){ //for each example row
         const examplesTable = examples[table_i].rows;
@@ -17,15 +17,26 @@ module.exports = function(template, examples){
                 
                 const arg = template.steps[j].arg;
                 if(arg){
-                    step.arg = {};
+                    step.arg = {
+                        type : arg.type,
+                        lineNumber : arg.lineNumber
+                    };
+                    
+                    let argType;
                     if(typeof arg.content === "string"){//doc string
                         step.arg.content = resolveWithExample(arg.content, examplesTable, i);
+                        argType = "doc-string";
                     }else{//dataTable
                         step.arg.content = resolveDataTableWithExample(arg.content, examplesTable, i);
+                        argType = "data-table";
                     }
-                    step.arg.type = arg.type;
-                    step.arg.lineNumber = arg.lineNumber;
-                    if(arg.instruction && arg.instruction.length > 0) step.arg.instruction = template.steps[j].arg.instruction;
+                    if(arg.instruction && arg.instruction.length > 0) {
+                        step.arg.instruction = template.steps[j].arg.instruction;
+                        if(insProcessor[argType] && insProcessor[argType][arg.instruction]){
+                            insProcessor[argType][arg.instruction](step.arg);
+                        }
+                    }
+                    
                 }
                 steps[j] = step;
             }

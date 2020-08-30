@@ -6,7 +6,7 @@ const Scenario = require("./sections/Scenario");
 const ScenarioOutline = require("./sections/ScenarioOutline");
 const Background = require("./sections/Background");
 const Step = require("./sections/Step");
-const defaultExpander = require("./DefaultExpander");
+const defaultExpander = require("./ExamplesExpander");
 
 const stepsRegex = new RegExp("^(Given|When|Then|And|But)\\s+(.*)")
 const sectionRegex = new RegExp("\\s*(Scenario|Example|Scenario Outline|Scenario Template|Background|Rule)\\s*:(.*)")
@@ -20,11 +20,24 @@ class FeatureParser{
     constructor(options){
         this.options = Object.assign( { clubBgSteps: false }, options );
         this.outlineExpanders = [];
+        this.instructionTypes = [ "doc-string", "data-table"];
+        this.insProcessor = {};
     }
 
     registerOutlineExpander(expander){
         this.outlineExpanders.push(expander);
     }
+    
+    onInstruction(type, ins ,  fn){
+        if(typeof fn !== 'function') throw new Error("Invalid instruction processor type");
+        else if(this.instructionTypes.indexOf(type) !== -1) {
+            this.insProcessor[type] = {
+                [ins]: fn
+            };
+        }
+        else throw new Error("Unsupported instruction type: " + type);
+    }
+
 
     _resetParameters(){
         this.lineNumber = 0;
@@ -213,7 +226,7 @@ class FeatureParser{
             }
 
             if(!scenarios){
-                scenarios = defaultExpander(template, examples);
+                scenarios = defaultExpander(template, examples, this.insProcessor);
             }
             scenarioOutline.expanded = scenarios;
             
@@ -316,7 +329,13 @@ class FeatureParser{
             lineNumber: startingLineNumber+1,
             type: "DocString"
         }
-        if(this.instruction) this.currentStep.arg.instruction = this.instruction;
+        if(this.instruction) {
+            this.currentStep.arg.instruction = this.instruction;
+            if(this.section.keyword.length < 9 ){
+                if(this.insProcessor["doc-string"] && this.insProcessor["doc-string"][this.instruction])
+                    this.insProcessor["doc-string"][this.instruction](this.currentStep.arg);
+            }
+        }
     }
 
     readDataTable(){
@@ -341,7 +360,13 @@ class FeatureParser{
             lineNumber: startingLineNumber+1,
             type: "DataTable"
         }
-        if(this.instruction) this.currentStep.arg.instruction = this.instruction;
+        if(this.instruction) {
+            this.currentStep.arg.instruction = this.instruction;
+            if(this.section.keyword.length < 9){
+                if(this.insProcessor["data-table"] && this.insProcessor["data-table"][this.instruction])
+                    this.insProcessor["data-table"][this.instruction](this.currentStep.arg);
+            }
+        }
     }
 
     readListOfExamples(){
@@ -408,6 +433,7 @@ class FeatureParser{
         }
     }
 
+    //TODO: separate it
     breakIntoTags(line){
         const commentIndex = line.indexOf(" #");
         if(commentIndex > -1){ //remove comment
