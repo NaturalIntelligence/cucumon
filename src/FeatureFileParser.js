@@ -1,5 +1,6 @@
 const ParsingError = require("./ParsingError");
 
+const InsProcessor = require("./InsProcessor");
 const util = require("./util.js");
 const Rule = require("./sections/Rule");
 const Scenario = require("./sections/Scenario");
@@ -20,24 +21,15 @@ class FeatureParser{
     constructor(options){
         this.options = Object.assign( { clubBgSteps: false }, options );
         this.outlineExpanders = [];
-        this.instructionTypes = [ "doc-string", "data-table"];
-        this.insProcessor = {};
     }
 
     registerOutlineExpander(expander){
         this.outlineExpanders.push(expander);
     }
     
-    onInstruction(type, ins ,  fn){
-        if(typeof fn !== 'function') throw new Error("Invalid instruction processor type");
-        else if(this.instructionTypes.indexOf(type) !== -1) {
-            this.insProcessor[type] = {
-                [ins]: fn
-            };
-        }
-        else throw new Error("Unsupported instruction type: " + type);
+    onInstruction(type, ins, fn){
+        InsProcessor.register(type, ins, fn);
     }
-
 
     _resetParameters(){
         this.lineNumber = 0;
@@ -221,12 +213,17 @@ class FeatureParser{
 
             let scenarios;
             for (let i = 0; i < this.outlineExpanders.length; i++) {
-                scenarios = this.outlineExpanders[i](template, examples);
+                try{
+                    scenarios = this.outlineExpanders[i](template, examples, InsProcessor);
+                }catch(err){
+                    const errMsg = "🤦 Error in processing Examples secton through custom expander for outline at line number " + scenarioOutline.lineNumber;
+                    throw new ParsingError(errMsg, scenarioOutline.lineNumber);
+                }
                 if(!scenarios) continue;
             }
 
             if(!scenarios){
-                scenarios = defaultExpander(template, examples, this.insProcessor);
+                scenarios = defaultExpander(template, examples, InsProcessor);
             }
             scenarioOutline.expanded = scenarios;
             
@@ -288,7 +285,7 @@ class FeatureParser{
             if(line[0] === '#' && line[1] === '>') {
                 this.instruction = line.substr(2).trim(); 
             }else if(line[0] === '#') return true;
-            else if(line.startsWith('"""') ) {
+            else if(line.startsWith('"""') || line.startsWith('```') ) {
                 this.readDocString();
                 this.instruction = "";
             }else if(line[0] === '|') {
@@ -312,10 +309,11 @@ class FeatureParser{
 
     readDocString(){
         const docString = [];
+        const startingLine = this.lines[this.lineNumber].trim();
         const startingLineNumber = this.lineNumber;
         for(this.lineNumber++;this.lineNumber < this.lines.length; this.lineNumber++){
             const line = this.lines[this.lineNumber].trim();
-            if(line === '"""'){
+            if(line === startingLine ){
                 break;
             }else{
                 docString.push(line);
@@ -332,8 +330,7 @@ class FeatureParser{
         if(this.instruction) {
             this.currentStep.arg.instruction = this.instruction;
             if(this.section.keyword.length < 9 ){
-                if(this.insProcessor["doc-string"] && this.insProcessor["doc-string"][this.instruction])
-                    this.insProcessor["doc-string"][this.instruction](this.currentStep.arg);
+                InsProcessor.process("DocString", this.instruction, this.currentStep);
             }
         }
     }
@@ -363,8 +360,7 @@ class FeatureParser{
         if(this.instruction) {
             this.currentStep.arg.instruction = this.instruction;
             if(this.section.keyword.length < 9){
-                if(this.insProcessor["data-table"] && this.insProcessor["data-table"][this.instruction])
-                    this.insProcessor["data-table"][this.instruction](this.currentStep.arg);
+                InsProcessor.process("DataTable", this.instruction, this.currentStep);
             }
         }
     }

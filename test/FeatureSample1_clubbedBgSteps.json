@@ -283,8 +283,8 @@
                                         "lineNumber": 53,
                                         "arg": {
                                             "content": [
-                                                [ "a\\|b\\|c", "\\|" ],
-                                                [ "a\\|b\\|c", "\\|" ]
+                                                [ "abc", "" ],
+                                                [ "abc", "" ]
                                             ],
                                             "type": "DataTable",
                                             "instruction": "instruction 2",
