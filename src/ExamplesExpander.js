@@ -1,7 +1,7 @@
 const Step = require("./sections/Step");
 const Scenario = require("./sections/Scenario");
 
-module.exports = function(template, examples, insProcessor){
+module.exports = function(template, examples){
     const scenarios = []
     for(let table_i=0; table_i<examples.length; table_i++){ //for each example row
         const examplesTable = examples[table_i].rows;
@@ -31,7 +31,6 @@ module.exports = function(template, examples, insProcessor){
                     }
                     if(arg.instruction && arg.instruction.length > 0) {
                         step.arg.instruction = arg.instruction;
-                        insProcessor.process(arg.type, arg.instruction, step);
                     }
                     
                 }

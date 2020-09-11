@@ -1,6 +1,5 @@
 const ParsingError = require("./ParsingError");
 
-const InsProcessor = require("./InsProcessor");
 const util = require("./util.js");
 const Rule = require("./sections/Rule");
 const Scenario = require("./sections/Scenario");
@@ -25,10 +24,6 @@ class FeatureParser{
 
     registerOutlineExpander(expander){
         this.outlineExpanders.push(expander);
-    }
-    
-    onInstruction(type, ins, fn){
-        InsProcessor.register(type, ins, fn);
     }
 
     _resetParameters(){
@@ -65,14 +60,12 @@ class FeatureParser{
         }else{
             this.readDescription();
             this.result = {
-                feature: {
-                    keyword: "Feature",
-                    description: this.section.description,
-                    statement: this.section.statement,
-                    lineNumber: this.section.lineNumber + 1,
-                    tags: this.tags,
-                    rules: []
-                }
+                keyword: "Feature",
+                description: this.section.description,
+                statement: this.section.statement,
+                lineNumber: this.section.lineNumber + 1,
+                tags: this.tags,
+                rules: []
             }
             this.tags = [];//tags are reset once consumed
         }
@@ -81,7 +74,7 @@ class FeatureParser{
     readRuleAndBgSection(){
         let rule;
         if(this.section.keyword === 'Rule'){
-            if(this.result.feature.rules.length > 0 && this.result.feature.rules[0].statement === "__default"){
+            if(this.result.rules.length > 0 && this.result.rules[0].statement === "__default"){
                 throw new ParsingError("Unexpected Rule section at line number " + this.section.lineNumber, this.section.lineNumber);
             }
             this.validateTags();
@@ -89,14 +82,14 @@ class FeatureParser{
             rule = new Rule(this.section.statement, this.section.description, this.section.lineNumber + 1);
             const found = this.readBeginingOfASection();
             if(!found) throw new Error("Unexpected Rule section at the end of the file");
-        }else if(this.result.feature.rules.length === 0){
+        }else if(this.result.rules.length === 0){
             rule = new Rule("__default");
         }else{
             //Scenario, Scenario Outline
             //Repeated background section
             return;
         }
-        this.result.feature.rules.push(rule);
+        this.result.rules.push(rule);
         return this.readBackgroundSection();
     }
 
@@ -122,7 +115,7 @@ class FeatureParser{
     }
 
     currentRule(){
-        return this.result.feature.rules[ this.result.feature.rules.length - 1 ];
+        return this.result.rules[ this.result.rules.length - 1 ];
     }
 
     /**
@@ -214,7 +207,7 @@ class FeatureParser{
             let scenarios;
             for (let i = 0; i < this.outlineExpanders.length; i++) {
                 try{
-                    scenarios = this.outlineExpanders[i](template, examples, InsProcessor);
+                    scenarios = this.outlineExpanders[i](template, examples);
                 }catch(err){
                     const errMsg = "🤦 Error in processing Examples secton through custom expander for outline at line number " + scenarioOutline.lineNumber;
                     throw new ParsingError(errMsg, scenarioOutline.lineNumber);
@@ -223,7 +216,7 @@ class FeatureParser{
             }
 
             if(!scenarios){
-                scenarios = defaultExpander(template, examples, InsProcessor);
+                scenarios = defaultExpander(template, examples);
             }
             scenarioOutline.expanded = scenarios;
             
@@ -329,9 +322,6 @@ class FeatureParser{
         }
         if(this.instruction) {
             this.currentStep.arg.instruction = this.instruction;
-            if(this.section.keyword.length < 9 ){
-                InsProcessor.process("DocString", this.instruction, this.currentStep);
-            }
         }
     }
 
@@ -359,9 +349,6 @@ class FeatureParser{
         }
         if(this.instruction) {
             this.currentStep.arg.instruction = this.instruction;
-            if(this.section.keyword.length < 9){
-                InsProcessor.process("DataTable", this.instruction, this.currentStep);
-            }
         }
     }
 

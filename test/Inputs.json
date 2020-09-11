@@ -1,211 +1,209 @@
 {
-    "feature": {
-        "keyword": "Feature",
-        "description": "",
-        "statement": "Special Characters",
-        "lineNumber": 1,
-        "tags": [],
-        "rules": [
-            {
-                "keyword": "Rule",
-                "statement": "__default",
-                "scenarios": [
-                    {
-                        "keyword": "Scenario Template",
-                        "statement": "scenario outline",
-                        "description": "",
-                        "lineNumber": 3,
-                        "id": 1,
-                        "expanded": [
-                            {
-                                "keyword": "Scenario Template",
-                                "statement": "scenario outline",
-                                "description": "",
-                                "lineNumber": 3,
-                                "id": 1,
-                                "steps": [
-                                    {
-                                        "keyword": "Given",
-                                        "statement": "an example",
-                                        "lineNumber": 4,
-                                        "arg": null
-                                    },
-                                    {
-                                        "keyword": "And",
-                                        "statement": "I can pass \"\" with spceial characters",
-                                        "lineNumber": 5,
-                                        "arg": null
-                                    }
-                                ],
-                                "tags": [],
-                                "examplesLineNumber": [
-                                    10
-                                ]
-                            },
-                            {
-                                "keyword": "Scenario Template",
-                                "statement": "scenario outline",
-                                "description": "",
-                                "lineNumber": 3,
-                                "id": 1,
-                                "steps": [
-                                    {
-                                        "keyword": "Given",
-                                        "statement": "an example",
-                                        "lineNumber": 4,
-                                        "arg": null
-                                    },
-                                    {
-                                        "keyword": "And",
-                                        "statement": "I can pass \"new\\nline\\ttab\\b\" with spceial characters",
-                                        "lineNumber": 5,
-                                        "arg": null
-                                    }
-                                ],
-                                "tags": [],
-                                "examplesLineNumber": [
-                                    12
-                                ]
-                            },
-                            {
-                                "keyword": "Scenario Template",
-                                "statement": "scenario outline",
-                                "description": "",
-                                "lineNumber": 3,
-                                "id": 1,
-                                "steps": [
-                                    {
-                                        "keyword": "Given",
-                                        "statement": "an example",
-                                        "lineNumber": 4,
-                                        "arg": null
-                                    },
-                                    {
-                                        "keyword": "And",
-                                        "statement": "I can pass \"left|right|\" with spceial characters",
-                                        "lineNumber": 5,
-                                        "arg": null
-                                    }
-                                ],
-                                "tags": [],
-                                "examplesLineNumber": [
-                                    14
-                                ]
-                            }
-                        ],
-                        "tags": [],
-                        "examples": [
-                            { 
-                                "lineNumber": 7,
-                                "rows": [
-                                    {
-                                        "lineNumber": 8,
-                                        "regex": [
-                                            {}
-                                        ],
-                                        "cells": [
-                                            "data"
-                                        ]
-                                    },
-                                    {
-                                        "lineNumber": 10,
-                                        "cells": [
-                                            ""
-                                        ]
-                                    },
-                                    {
-                                        "lineNumber": 12,
-                                        "cells": [
-                                            "new\\nline\\ttab\\b"
-                                        ]
-                                    },
-                                    {
-                                        "lineNumber": 14,
-                                        "cells": [
-                                            "left|right|"
-                                        ]
-                                    }
-                                ],
-                                "tags":[]
-                            }
-                        ]
-                    },
-                    {
-                        "keyword": "Example",
-                        "statement": "data table, doc string and special chars",
-                        "description": "",
-                        "lineNumber": 16,
-                        "id": 2,
-                        "steps": [
-                            {
-                                "keyword": "Given",
-                                "statement": "a scenario",
-                                "lineNumber": 17,
-                                "arg": {
-                                    "content": [
-                                        [
-                                            "with",
-                                            "single",
-                                            "data table",
-                                            "line"
-                                        ]
+    "keyword": "Feature",
+    "description": "",
+    "statement": "Special Characters",
+    "lineNumber": 1,
+    "tags": [],
+    "rules": [
+        {
+            "keyword": "Rule",
+            "statement": "__default",
+            "scenarios": [
+                {
+                    "keyword": "Scenario Template",
+                    "statement": "scenario outline",
+                    "description": "",
+                    "lineNumber": 3,
+                    "id": 1,
+                    "expanded": [
+                        {
+                            "keyword": "Scenario Template",
+                            "statement": "scenario outline",
+                            "description": "",
+                            "lineNumber": 3,
+                            "id": 1,
+                            "steps": [
+                                {
+                                    "keyword": "Given",
+                                    "statement": "an example",
+                                    "lineNumber": 4,
+                                    "arg": null
+                                },
+                                {
+                                    "keyword": "And",
+                                    "statement": "I can pass \"\" with spceial characters",
+                                    "lineNumber": 5,
+                                    "arg": null
+                                }
+                            ],
+                            "tags": [],
+                            "examplesLineNumber": [
+                                10
+                            ]
+                        },
+                        {
+                            "keyword": "Scenario Template",
+                            "statement": "scenario outline",
+                            "description": "",
+                            "lineNumber": 3,
+                            "id": 1,
+                            "steps": [
+                                {
+                                    "keyword": "Given",
+                                    "statement": "an example",
+                                    "lineNumber": 4,
+                                    "arg": null
+                                },
+                                {
+                                    "keyword": "And",
+                                    "statement": "I can pass \"new\\nline\\ttab\\b\" with spceial characters",
+                                    "lineNumber": 5,
+                                    "arg": null
+                                }
+                            ],
+                            "tags": [],
+                            "examplesLineNumber": [
+                                12
+                            ]
+                        },
+                        {
+                            "keyword": "Scenario Template",
+                            "statement": "scenario outline",
+                            "description": "",
+                            "lineNumber": 3,
+                            "id": 1,
+                            "steps": [
+                                {
+                                    "keyword": "Given",
+                                    "statement": "an example",
+                                    "lineNumber": 4,
+                                    "arg": null
+                                },
+                                {
+                                    "keyword": "And",
+                                    "statement": "I can pass \"left|right|\" with spceial characters",
+                                    "lineNumber": 5,
+                                    "arg": null
+                                }
+                            ],
+                            "tags": [],
+                            "examplesLineNumber": [
+                                14
+                            ]
+                        }
+                    ],
+                    "tags": [],
+                    "examples": [
+                        { 
+                            "lineNumber": 7,
+                            "rows": [
+                                {
+                                    "lineNumber": 8,
+                                    "regex": [
+                                        {}
                                     ],
-                                    "type": "DataTable",
-                                    "lineNumber": 18
+                                    "cells": [
+                                        "data"
+                                    ]
+                                },
+                                {
+                                    "lineNumber": 10,
+                                    "cells": [
+                                        ""
+                                    ]
+                                },
+                                {
+                                    "lineNumber": 12,
+                                    "cells": [
+                                        "new\\nline\\ttab\\b"
+                                    ]
+                                },
+                                {
+                                    "lineNumber": 14,
+                                    "cells": [
+                                        "left|right|"
+                                    ]
                                 }
-                            },
-                            {
-                                "keyword": "When",
-                                "statement": "I pass data table",
-                                "lineNumber": 19,
-                                "arg": {
-                                    "content": [
-                                        [
-                                            "",
-                                            "empty"
-                                        ],
-                                        [
-                                            "new\\nline\\ttab\\b",
-                                            "with backslash chars"
-                                        ],
-                                        [
-                                            "left|right|",
-                                            "with pipe sign",
-                                            "extra column should be skipped"
-                                        ]
-                                    ],
-                                    "type": "DataTable",
-                                    "lineNumber": 21
-                                }
-                            },
-                            {
-                                "keyword": "And",
-                                "statement": "I can also pass a doc string",
-                                "lineNumber": 24,
-                                "arg": {
-                                    "content": "This text will be trimmed from starting and \\tend\n| with pipe\n# with hash\nFeature: something\nand \"\"\" are allowed in between \"",
-                                    "type": "DocString",
-                                    "lineNumber": 26,
-                                    "instruction": "no format; single line;"
-                                }
-                            },
-                            {
-                                "keyword": "And",
-                                "statement": "I can give \"  \" in quotes",
-                                "lineNumber": 33,
-                                "arg": null
-                            },
-                            {
-                                "keyword": "And",
-                                "statement": "I can pass 😀 unicode",
-                                "lineNumber": 34,
-                                "arg": null
+                            ],
+                            "tags":[]
+                        }
+                    ]
+                },
+                {
+                    "keyword": "Example",
+                    "statement": "data table, doc string and special chars",
+                    "description": "",
+                    "lineNumber": 16,
+                    "id": 2,
+                    "steps": [
+                        {
+                            "keyword": "Given",
+                            "statement": "a scenario",
+                            "lineNumber": 17,
+                            "arg": {
+                                "content": [
+                                    [
+                                        "with",
+                                        "single",
+                                        "data table",
+                                        "line"
+                                    ]
+                                ],
+                                "type": "DataTable",
+                                "lineNumber": 18
                             }
-                        ],
-                        "tags": []
-                    }
-                ]
-            }
-        ]
-    }
+                        },
+                        {
+                            "keyword": "When",
+                            "statement": "I pass data table",
+                            "lineNumber": 19,
+                            "arg": {
+                                "content": [
+                                    [
+                                        "",
+                                        "empty"
+                                    ],
+                                    [
+                                        "new\\nline\\ttab\\b",
+                                        "with backslash chars"
+                                    ],
+                                    [
+                                        "left|right|",
+                                        "with pipe sign",
+                                        "extra column should be skipped"
+                                    ]
+                                ],
+                                "type": "DataTable",
+                                "lineNumber": 21
+                            }
+                        },
+                        {
+                            "keyword": "And",
+                            "statement": "I can also pass a doc string",
+                            "lineNumber": 24,
+                            "arg": {
+                                "content": "This text will be trimmed from starting and \\tend\n| with pipe\n# with hash\nFeature: something\nand \"\"\" are allowed in between \"",
+                                "type": "DocString",
+                                "lineNumber": 26,
+                                "instruction": "no format; single line;"
+                            }
+                        },
+                        {
+                            "keyword": "And",
+                            "statement": "I can give \"  \" in quotes",
+                            "lineNumber": 33,
+                            "arg": null
+                        },
+                        {
+                            "keyword": "And",
+                            "statement": "I can pass 😀 unicode",
+                            "lineNumber": 34,
+                            "arg": null
+                        }
+                    ],
+                    "tags": []
+                }
+            ]
+        }
+    ]
 }

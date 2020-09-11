@@ -1,57 +1,55 @@
 {
-    "feature": {
-      "keyword": "Feature",
-      "description": "",
-      "statement": "invalid",
-      "lineNumber": 3,
-      "tags": [
-        "@feature"
-      ],
-      "rules": [
+  "keyword": "Feature",
+  "description": "",
+  "statement": "invalid",
+  "lineNumber": 3,
+  "tags": [
+    "@feature"
+  ],
+  "rules": [
+    {
+      "keyword": "Rule",
+      "statement": "__default",
+      "scenarios": [
         {
-          "keyword": "Rule",
-          "statement": "__default",
-          "scenarios": [
+          "keyword": "Scenario",
+          "statement": "again invalid",
+          "description": "",
+          "lineNumber": 6,
+          "id": 1,
+          "steps": [
             {
-              "keyword": "Scenario",
-              "statement": "again invalid",
-              "description": "",
-              "lineNumber": 6,
-              "id": 1,
-              "steps": [
-                {
-                  "keyword": "Given",
-                  "statement": "this step",
-                  "lineNumber": 7,
-                  "arg": null
-                }
-              ],
-              "tags": [
-                "@tags"
-              ]
-            },
-            {
-              "keyword": "Scenario",
-              "statement": "some thing",
-              "description": "",
-              "lineNumber": 12,
-              "id": 2,
-              "steps": [
-                {
-                  "keyword": "Given",
-                  "statement": "this step",
-                  "lineNumber": 13,
-                  "arg": null
-                }
-              ],
-              "tags": [
-                "@tag2",
-                "@tag3"
-              ]
+              "keyword": "Given",
+              "statement": "this step",
+              "lineNumber": 7,
+              "arg": null
             }
+          ],
+          "tags": [
+            "@tags"
+          ]
+        },
+        {
+          "keyword": "Scenario",
+          "statement": "some thing",
+          "description": "",
+          "lineNumber": 12,
+          "id": 2,
+          "steps": [
+            {
+              "keyword": "Given",
+              "statement": "this step",
+              "lineNumber": 13,
+              "arg": null
+            }
+          ],
+          "tags": [
+            "@tag2",
+            "@tag3"
           ]
         }
       ]
     }
-  }
+  ]
+}
   

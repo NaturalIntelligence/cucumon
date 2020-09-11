@@ -18,38 +18,36 @@ describe("Rule", function () {
                 Then I get ["a","b","c"]
         `;
         const expected = {
-            "feature": {
-                "keyword": "Feature",
-                "description": "",
-                "statement": "Default Rule With Scenario",
-                "lineNumber": 2,
-                "tags": [ "@all"],
-                "rules": [{
-                    "keyword": "Rule",
-                    "statement": "__default",
-                    "scenarios": [{
-                        "keyword": "Scenario",
-                        "statement": "breaks string for \" \"",
-                        "description": "",
-                        "lineNumber": 5,
-                        "id": 1,
-                        "steps": [{
-                                "keyword": "When",
-                                "statement": "I pass \"a b c\" and \" \"",
-                                "lineNumber": 6,
-                                "arg": null
-                            },
-                            {
-                                "keyword": "Then",
-                                "statement": "I get [\"a\",\"b\",\"c\"]",
-                                "lineNumber": 9,
-                                "arg": null,
-                                "instruction": "instructions are not ignored"
-                        }],
-                        "tags": [ "@one" ]
-                    }]
+            "keyword": "Feature",
+            "description": "",
+            "statement": "Default Rule With Scenario",
+            "lineNumber": 2,
+            "tags": [ "@all"],
+            "rules": [{
+                "keyword": "Rule",
+                "statement": "__default",
+                "scenarios": [{
+                    "keyword": "Scenario",
+                    "statement": "breaks string for \" \"",
+                    "description": "",
+                    "lineNumber": 5,
+                    "id": 1,
+                    "steps": [{
+                            "keyword": "When",
+                            "statement": "I pass \"a b c\" and \" \"",
+                            "lineNumber": 6,
+                            "arg": null
+                        },
+                        {
+                            "keyword": "Then",
+                            "statement": "I get [\"a\",\"b\",\"c\"]",
+                            "lineNumber": 9,
+                            "arg": null,
+                            "instruction": "instructions are not ignored"
+                    }],
+                    "tags": [ "@one" ]
                 }]
-            }
+            }]
         };
         
         const result = parser.parse(input) ;
@@ -78,68 +76,65 @@ describe("Rule", function () {
 
         `;
         const expected = {
-            "feature": {
-                "keyword": "Feature",
-                "description": "",
-                "statement": "Default Rule With Scenario",
-                "lineNumber": 2,
-                "tags": [ "@all" ],
-                "rules": [ {
-                    "keyword": "Rule",
-                    "statement": "__default",
-                    "scenarios": [{
-                        "keyword": "Scenario Outline",
-                        "statement": "breaks string",
-                        "description": "",
-                        "lineNumber": 5,
-                        "id": 1,
-                        "tags": [ "@one" ],
-                        "expanded": [
-                            {
-                                "keyword": "Scenario Outline",
-                                "statement": "breaks string",
-                                "description": "",
-                                "lineNumber": 5,
-                                "id": 1,
-                                "steps": [
-                                    {
-                                        "keyword": "When",
-                                        "statement": "I pass \"a b c\" and \" \"",
-                                        "lineNumber": 6,
-                                        "arg": null
-                                    },
-                                    {
-                                        "keyword": "Then",
-                                        "statement": "I get [\"a\",\"b\",\"c\"]",
-                                        "lineNumber": 9,
-                                        "arg": null
-                                    }
-                                ],
-                                "tags": [ "@one" ],
-                                "examplesLineNumber": [
-                                    13
-                                ]
-                            }
-                        ],
-                        examples: [{ 
-                            "lineNumber": 11,
-                            "rows":[
+            "keyword": "Feature",
+            "description": "",
+            "statement": "Default Rule With Scenario",
+            "lineNumber": 2,
+            "tags": [ "@all" ],
+            "rules": [ {
+                "keyword": "Rule",
+                "statement": "__default",
+                "scenarios": [{
+                    "keyword": "Scenario Outline",
+                    "statement": "breaks string",
+                    "description": "",
+                    "lineNumber": 5,
+                    "id": 1,
+                    "tags": [ "@one" ],
+                    "expanded": [
+                        {
+                            "keyword": "Scenario Outline",
+                            "statement": "breaks string",
+                            "description": "",
+                            "lineNumber": 5,
+                            "id": 1,
+                            "steps": [
                                 {
-                                    "lineNumber": 12,
-                                    "regex": [ {}, {} ],
-                                    "cells": [ "string", "delimeter" ]
-                                }, {
-                                    "lineNumber": 13,
-                                    "cells": [ "a,b,c", "," ]
+                                    "keyword": "When",
+                                    "statement": "I pass \"a b c\" and \" \"",
+                                    "lineNumber": 6,
+                                    "arg": null
+                                },
+                                {
+                                    "keyword": "Then",
+                                    "statement": "I get [\"a\",\"b\",\"c\"]",
+                                    "lineNumber": 9,
+                                    "arg": null
                                 }
                             ],
-                            "tags": []
-                        }]
+                            "tags": [ "@one" ],
+                            "examplesLineNumber": [
+                                13
+                            ]
+                        }
+                    ],
+                    examples: [{ 
+                        "lineNumber": 11,
+                        "rows":[
+                            {
+                                "lineNumber": 12,
+                                "regex": [ {}, {} ],
+                                "cells": [ "string", "delimeter" ]
+                            }, {
+                                "lineNumber": 13,
+                                "cells": [ "a,b,c", "," ]
+                            }
+                        ],
+                        "tags": []
                     }]
                 }]
-            }
-        }
-        ;
+            }]
+        };
         
         const result = parser.parse(input) ;
         const actual = JSON.parse(JSON.stringify(result));
@@ -165,54 +160,52 @@ describe("Rule", function () {
                 Then I get ["a","b","c"]
         `;
         const expected = {
-            "feature": {
-                "keyword": "Feature",
-                "description": "",
-                "statement": "Default Rule With Scenario",
-                "lineNumber": 2,
-                "tags": [ "@all"],
-                "rules": [{
-                    "keyword": "Rule",
-                    "statement": "__default",
-                    "scenarios": [{
-                        "keyword": "Scenario",
-                        "statement": "breaks string for \" \"",
-                        "description": "",
-                        "lineNumber": 8,
-                        "id": 1,
-                        "steps": [{
-                                "keyword": "When",
-                                "statement": "I pass \"a b c\" and \" \"",
-                                "lineNumber": 9,
-                                "arg": null
-                            },
-                            {
-                                "keyword": "Then",
-                                "statement": "I get [\"a\",\"b\",\"c\"]",
-                                "lineNumber": 12,
-                                "arg": null,
-                                "instruction": "instructions are not ignored"
-                        }],
-                        "tags": [ "@one" ]
+            "keyword": "Feature",
+            "description": "",
+            "statement": "Default Rule With Scenario",
+            "lineNumber": 2,
+            "tags": [ "@all"],
+            "rules": [{
+                "keyword": "Rule",
+                "statement": "__default",
+                "scenarios": [{
+                    "keyword": "Scenario",
+                    "statement": "breaks string for \" \"",
+                    "description": "",
+                    "lineNumber": 8,
+                    "id": 1,
+                    "steps": [{
+                            "keyword": "When",
+                            "statement": "I pass \"a b c\" and \" \"",
+                            "lineNumber": 9,
+                            "arg": null
+                        },
+                        {
+                            "keyword": "Then",
+                            "statement": "I get [\"a\",\"b\",\"c\"]",
+                            "lineNumber": 12,
+                            "arg": null,
+                            "instruction": "instructions are not ignored"
                     }],
-                    "hasBgSection": true,
-                    "background": {
-                        "keyword": "Background",
-                        "statement": "",
-                        "description": "",
-                        "lineNumber": 4,
-                        "id": -1,
-                        "steps": [
-                            {
-                                "keyword": "Given",
-                                "statement": "I do some setup",
-                                "lineNumber": 5,
-                                "arg": null
-                            }
-                        ]
-                    }
-                }]
-            }
+                    "tags": [ "@one" ]
+                }],
+                "hasBgSection": true,
+                "background": {
+                    "keyword": "Background",
+                    "statement": "",
+                    "description": "",
+                    "lineNumber": 4,
+                    "id": -1,
+                    "steps": [
+                        {
+                            "keyword": "Given",
+                            "statement": "I do some setup",
+                            "lineNumber": 5,
+                            "arg": null
+                        }
+                    ]
+                }
+            }]
         };
         
         const result = parser.parse(input) ;

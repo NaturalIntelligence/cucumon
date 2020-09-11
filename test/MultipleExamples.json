@@ -1,168 +1,166 @@
 {
-    "feature": {
-        "keyword": "Feature",
-        "description": "",
-        "statement": "Senario Outline",
-        "lineNumber": 1,
-        "tags": [],
-        "rules": [
-            {
-                "keyword": "Rule",
-                "statement": "__default",
-                "scenarios": [
-                    {
-                        "keyword": "Scenario Template",
-                        "statement": "scenario outline",
-                        "description": "",
-                        "lineNumber": 4,
-                        "id": 1,
-                        "expanded": [
-                            {
-                                "keyword": "Scenario Template",
-                                "statement": "scenario outline",
-                                "description": "",
-                                "lineNumber": 4,
-                                "id": 1,
-                                "steps": [
-                                    {
-                                        "keyword": "Given",
-                                        "statement": "an example",
-                                        "lineNumber": 5,
-                                        "arg": null
-                                    },
-                                    {
-                                        "keyword": "And",
-                                        "statement": "I can pass \"\" with spceial characters",
-                                        "lineNumber": 6,
-                                        "arg": null
-                                    }
-                                ],
-                                "tags": [
-                                    "@tag",
-                                    "@parent"
-                                ],
-                                "examplesLineNumber": [
-                                    13
-                                ]
-                            },
-                            {
-                                "keyword": "Scenario Template",
-                                "statement": "scenario outline",
-                                "description": "",
-                                "lineNumber": 4,
-                                "id": 1,
-                                "steps": [
-                                    {
-                                        "keyword": "Given",
-                                        "statement": "an example",
-                                        "lineNumber": 5,
-                                        "arg": null
-                                    },
-                                    {
-                                        "keyword": "And",
-                                        "statement": "I can pass \"<data>\" with spceial characters",
-                                        "lineNumber": 6,
-                                        "arg": null
-                                    }
-                                ],
-                                "tags": [
-                                    "@wip",
-                                    "@parent"
-                                ],
-                                "examplesLineNumber": [
-                                    19
-                                ]
-                            },
-                            {
-                                "keyword": "Scenario Template",
-                                "statement": "scenario outline",
-                                "description": "",
-                                "lineNumber": 4,
-                                "id": 1,
-                                "steps": [
-                                    {
-                                        "keyword": "Given",
-                                        "statement": "an example",
-                                        "lineNumber": 5,
-                                        "arg": null
-                                    },
-                                    {
-                                        "keyword": "And",
-                                        "statement": "I can pass \"<data>\" with spceial characters",
-                                        "lineNumber": 6,
-                                        "arg": null
-                                    }
-                                ],
-                                "tags": [
-                                    "@wip",
-                                    "@parent"
-                                ],
-                                "examplesLineNumber": [
-                                    21
-                                ]
-                            }
-                        ],
-                        "tags": [
-                            "@parent"
-                        ],
-                        "examples": [
-                            {
-                                "lineNumber": 10,
-                                "rows": [
-                                    {
-                                        "lineNumber": 11,
-                                        "regex": [
-                                            {}
-                                        ],
-                                        "cells": [
-                                            "data"
-                                        ]
-                                    },
-                                    {
-                                        "lineNumber": 13,
-                                        "cells": [
-                                            ""
-                                        ]
-                                    }
-                                ],
-                                "instruction": "instruction",
-                                "tags": [
-                                    "@tag"
-                                ]
-                            },
-                            {
-                                "lineNumber": 16,
-                                "rows": [
-                                    {
-                                        "lineNumber": 17,
-                                        "regex": [
-                                            {}
-                                        ],
-                                        "cells": [
-                                            "content"
-                                        ]
-                                    },
-                                    {
-                                        "lineNumber": 19,
-                                        "cells": [
-                                            "new\\nline\\ttab\\b"
-                                        ]
-                                    },
-                                    {
-                                        "lineNumber": 21,
-                                        "cells": [
-                                            "left|right|"
-                                        ]
-                                    }
-                                ],
-                                "tags": [
-                                    "@wip"
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
-    }
+    "keyword": "Feature",
+    "description": "",
+    "statement": "Senario Outline",
+    "lineNumber": 1,
+    "tags": [],
+    "rules": [
+        {
+            "keyword": "Rule",
+            "statement": "__default",
+            "scenarios": [
+                {
+                    "keyword": "Scenario Template",
+                    "statement": "scenario outline",
+                    "description": "",
+                    "lineNumber": 4,
+                    "id": 1,
+                    "expanded": [
+                        {
+                            "keyword": "Scenario Template",
+                            "statement": "scenario outline",
+                            "description": "",
+                            "lineNumber": 4,
+                            "id": 1,
+                            "steps": [
+                                {
+                                    "keyword": "Given",
+                                    "statement": "an example",
+                                    "lineNumber": 5,
+                                    "arg": null
+                                },
+                                {
+                                    "keyword": "And",
+                                    "statement": "I can pass \"\" with spceial characters",
+                                    "lineNumber": 6,
+                                    "arg": null
+                                }
+                            ],
+                            "tags": [
+                                "@tag",
+                                "@parent"
+                            ],
+                            "examplesLineNumber": [
+                                13
+                            ]
+                        },
+                        {
+                            "keyword": "Scenario Template",
+                            "statement": "scenario outline",
+                            "description": "",
+                            "lineNumber": 4,
+                            "id": 1,
+                            "steps": [
+                                {
+                                    "keyword": "Given",
+                                    "statement": "an example",
+                                    "lineNumber": 5,
+                                    "arg": null
+                                },
+                                {
+                                    "keyword": "And",
+                                    "statement": "I can pass \"<data>\" with spceial characters",
+                                    "lineNumber": 6,
+                                    "arg": null
+                                }
+                            ],
+                            "tags": [
+                                "@wip",
+                                "@parent"
+                            ],
+                            "examplesLineNumber": [
+                                19
+                            ]
+                        },
+                        {
+                            "keyword": "Scenario Template",
+                            "statement": "scenario outline",
+                            "description": "",
+                            "lineNumber": 4,
+                            "id": 1,
+                            "steps": [
+                                {
+                                    "keyword": "Given",
+                                    "statement": "an example",
+                                    "lineNumber": 5,
+                                    "arg": null
+                                },
+                                {
+                                    "keyword": "And",
+                                    "statement": "I can pass \"<data>\" with spceial characters",
+                                    "lineNumber": 6,
+                                    "arg": null
+                                }
+                            ],
+                            "tags": [
+                                "@wip",
+                                "@parent"
+                            ],
+                            "examplesLineNumber": [
+                                21
+                            ]
+                        }
+                    ],
+                    "tags": [
+                        "@parent"
+                    ],
+                    "examples": [
+                        {
+                            "lineNumber": 10,
+                            "rows": [
+                                {
+                                    "lineNumber": 11,
+                                    "regex": [
+                                        {}
+                                    ],
+                                    "cells": [
+                                        "data"
+                                    ]
+                                },
+                                {
+                                    "lineNumber": 13,
+                                    "cells": [
+                                        ""
+                                    ]
+                                }
+                            ],
+                            "instruction": "instruction",
+                            "tags": [
+                                "@tag"
+                            ]
+                        },
+                        {
+                            "lineNumber": 16,
+                            "rows": [
+                                {
+                                    "lineNumber": 17,
+                                    "regex": [
+                                        {}
+                                    ],
+                                    "cells": [
+                                        "content"
+                                    ]
+                                },
+                                {
+                                    "lineNumber": 19,
+                                    "cells": [
+                                        "new\\nline\\ttab\\b"
+                                    ]
+                                },
+                                {
+                                    "lineNumber": 21,
+                                    "cells": [
+                                        "left|right|"
+                                    ]
+                                }
+                            ],
+                            "tags": [
+                                "@wip"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
 }

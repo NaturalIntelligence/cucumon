@@ -19,39 +19,37 @@ describe("EOL:", function () {
                 Then it should be parsed`;
         
         const expected = {
-            "feature": {
-                "keyword": "Feature",
-                "description": "",
-                "statement": "Description",
-                "lineNumber": 1,
-                "tags": [],
-                "rules": [{
-                    "keyword": "Rule",
-                    "statement": "__default",
-                    "scenarios": [{
-                        "keyword": "Scenario",
-                        "statement": "Scenario Outline description",
-                        "description": "",
-                        "lineNumber": 2,
-                        "id": 1,
-                        "steps": [
-                            {
-                                "keyword": "When",
-                                "statement": "there is a <word> in",
-                                "lineNumber": 3,
-                                "arg": null
-                            },
-                            {
-                                "keyword": "Then",
-                                "statement": "it should be parsed",
-                                "lineNumber": 4,
-                                "arg": null
-                            }
-                        ],
-                        "tags": []
-                    }]
+            "keyword": "Feature",
+            "description": "",
+            "statement": "Description",
+            "lineNumber": 1,
+            "tags": [],
+            "rules": [{
+                "keyword": "Rule",
+                "statement": "__default",
+                "scenarios": [{
+                    "keyword": "Scenario",
+                    "statement": "Scenario Outline description",
+                    "description": "",
+                    "lineNumber": 2,
+                    "id": 1,
+                    "steps": [
+                        {
+                            "keyword": "When",
+                            "statement": "there is a <word> in",
+                            "lineNumber": 3,
+                            "arg": null
+                        },
+                        {
+                            "keyword": "Then",
+                            "statement": "it should be parsed",
+                            "lineNumber": 4,
+                            "arg": null
+                        }
+                    ],
+                    "tags": []
                 }]
-            }
+            }]
         };
         
 

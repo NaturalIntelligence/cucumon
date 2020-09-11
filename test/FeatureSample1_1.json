@@ -1,332 +1,330 @@
 {
-    "feature": {
-        "keyword": "Feature",
-        "description": "Give the desription here\n\nwith another line",
-        "statement": "Repeated rule with Background",
-        "lineNumber": 2,
-        "tags": [
-            "@all"
-        ],
-        "rules": [
-            {
-                "keyword": "Rule",
-                "statement": "some rule",
-                "description": "with some description in rule section\nhaving second line",
-                "lineNumber": 9,
-                "scenarios": [
-                    {
-                        "keyword": "Scenario Outline",
-                        "statement": "breaks string",
-                        "description": "This is the desription\nfor scenario outline",
-                        "lineNumber": 20,
-                        "id": 1,
-                        "expanded": [
-                            {
-                                "keyword": "Scenario Outline",
-                                "statement": "breaks string",
-                                "description": "This is the desription\nfor scenario outline",
-                                "lineNumber": 20,
-                                "id": 1,
-                                "steps": [
-                                    {
-                                        "keyword": "When",
-                                        "statement": "I pass \"a,b,c\" and delimeter: \",\"",
-                                        "lineNumber": 23,
-                                        "arg": null
-                                    },
-                                    {
-                                        "keyword": "Then",
-                                        "statement": "I get `[\"a\",\"b\",\"c\"]`",
-                                        "lineNumber": 24,
-                                        "arg": null
-                                    }
-                                ],
-                                "tags": [
-                                    "@outline"
-                                ],
-                                "examplesLineNumber": [
-                                    28
-                                ]
-                            },
-                            {
-                                "keyword": "Scenario Outline",
-                                "statement": "breaks string",
-                                "description": "This is the desription\nfor scenario outline",
-                                "lineNumber": 20,
-                                "id": 1,
-                                "steps": [
-                                    {
-                                        "keyword": "When",
-                                        "statement": "I pass \"abc\" and delimeter: \"\"",
-                                        "lineNumber": 23,
-                                        "arg": null
-                                    },
-                                    {
-                                        "keyword": "Then",
-                                        "statement": "I get `[\"a\",\"b\",\"c\"]`",
-                                        "lineNumber": 24,
-                                        "arg": null
-                                    }
-                                ],
-                                "tags": [
-                                    "@outline"
-                                ],
-                                "examplesLineNumber": [
-                                    31
-                                ]
-                            }
-                        ],
-                        "tags": [
-                            "@outline"
-                        ],
-                        "examples": [
-                            {
-                                "lineNumber": 26,
-                                "rows":[
-                                    {
-                                        "lineNumber": 27,
-                                        "regex": [
-                                            {},
-                                            {}
-                                        ],
-                                        "cells": [
-                                            "string",
-                                            "delimeter"
-                                        ]
-                                    },
-                                    {
-                                        "lineNumber": 28,
-                                        "cells": [
-                                            "a,b,c",
-                                            ","
-                                        ]
-                                    },
-                                    {
-                                        "lineNumber": 31,
-                                        "cells": [
-                                            "abc",
-                                            ""
-                                        ]
-                                    }
-                                ],
-                                "tags": []
-                            }
-                        ]
-                    },
-                    {
-                        "keyword": "Scenario",
-                        "statement": "breaks string for \" \"",
-                        "description": "",
-                        "lineNumber": 35,
-                        "id": 2,
-                        "steps": [
-                            {
-                                "keyword": "When",
-                                "statement": "I pass \"a b c\" and \" \"",
-                                "lineNumber": 36,
-                                "arg": null
-                            },
-                            {
-                                "keyword": "Then",
-                                "statement": "I get `[\"a\",\"b\",\"c\"]`",
-                                "lineNumber": 38,
-                                "arg": null
-                            }
-                        ],
-                        "tags": [
-                            "@one"
-                        ]
-                    }
-                ],
-                "hasBgSection": true,
-                "background": {
-                    "keyword": "Background",
-                    "statement": "to repeat the common operation with every scenario in rule 1",
-                    "description": "Background can also have description",
-                    "lineNumber": 14,
-                    "id": -1,
-                    "steps": [
+    "keyword": "Feature",
+    "description": "Give the desription here\n\nwith another line",
+    "statement": "Repeated rule with Background",
+    "lineNumber": 2,
+    "tags": [
+        "@all"
+    ],
+    "rules": [
+        {
+            "keyword": "Rule",
+            "statement": "some rule",
+            "description": "with some description in rule section\nhaving second line",
+            "lineNumber": 9,
+            "scenarios": [
+                {
+                    "keyword": "Scenario Outline",
+                    "statement": "breaks string",
+                    "description": "This is the desription\nfor scenario outline",
+                    "lineNumber": 20,
+                    "id": 1,
+                    "expanded": [
                         {
-                            "keyword": "Given",
-                            "statement": "a string tokenizer",
-                            "lineNumber": 17,
-                            "arg": null
+                            "keyword": "Scenario Outline",
+                            "statement": "breaks string",
+                            "description": "This is the desription\nfor scenario outline",
+                            "lineNumber": 20,
+                            "id": 1,
+                            "steps": [
+                                {
+                                    "keyword": "When",
+                                    "statement": "I pass \"a,b,c\" and delimeter: \",\"",
+                                    "lineNumber": 23,
+                                    "arg": null
+                                },
+                                {
+                                    "keyword": "Then",
+                                    "statement": "I get `[\"a\",\"b\",\"c\"]`",
+                                    "lineNumber": 24,
+                                    "arg": null
+                                }
+                            ],
+                            "tags": [
+                                "@outline"
+                            ],
+                            "examplesLineNumber": [
+                                28
+                            ]
+                        },
+                        {
+                            "keyword": "Scenario Outline",
+                            "statement": "breaks string",
+                            "description": "This is the desription\nfor scenario outline",
+                            "lineNumber": 20,
+                            "id": 1,
+                            "steps": [
+                                {
+                                    "keyword": "When",
+                                    "statement": "I pass \"abc\" and delimeter: \"\"",
+                                    "lineNumber": 23,
+                                    "arg": null
+                                },
+                                {
+                                    "keyword": "Then",
+                                    "statement": "I get `[\"a\",\"b\",\"c\"]`",
+                                    "lineNumber": 24,
+                                    "arg": null
+                                }
+                            ],
+                            "tags": [
+                                "@outline"
+                            ],
+                            "examplesLineNumber": [
+                                31
+                            ]
+                        }
+                    ],
+                    "tags": [
+                        "@outline"
+                    ],
+                    "examples": [
+                        {
+                            "lineNumber": 26,
+                            "rows":[
+                                {
+                                    "lineNumber": 27,
+                                    "regex": [
+                                        {},
+                                        {}
+                                    ],
+                                    "cells": [
+                                        "string",
+                                        "delimeter"
+                                    ]
+                                },
+                                {
+                                    "lineNumber": 28,
+                                    "cells": [
+                                        "a,b,c",
+                                        ","
+                                    ]
+                                },
+                                {
+                                    "lineNumber": 31,
+                                    "cells": [
+                                        "abc",
+                                        ""
+                                    ]
+                                }
+                            ],
+                            "tags": []
                         }
                     ]
+                },
+                {
+                    "keyword": "Scenario",
+                    "statement": "breaks string for \" \"",
+                    "description": "",
+                    "lineNumber": 35,
+                    "id": 2,
+                    "steps": [
+                        {
+                            "keyword": "When",
+                            "statement": "I pass \"a b c\" and \" \"",
+                            "lineNumber": 36,
+                            "arg": null
+                        },
+                        {
+                            "keyword": "Then",
+                            "statement": "I get `[\"a\",\"b\",\"c\"]`",
+                            "lineNumber": 38,
+                            "arg": null
+                        }
+                    ],
+                    "tags": [
+                        "@one"
+                    ]
                 }
-            },
-            {
-                "keyword": "Rule",
-                "statement": "some rule 2",
-                "description": "with description",
-                "lineNumber": 40,
-                "scenarios": [
+            ],
+            "hasBgSection": true,
+            "background": {
+                "keyword": "Background",
+                "statement": "to repeat the common operation with every scenario in rule 1",
+                "description": "Background can also have description",
+                "lineNumber": 14,
+                "id": -1,
+                "steps": [
                     {
-                        "keyword": "Scenario",
-                        "statement": "breaks string for \" \"",
-                        "description": "description for scenario",
-                        "lineNumber": 44,
-                        "id": 3,
-                        "steps": [
-                            {
-                                "keyword": "When",
-                                "statement": "I pass \"a b c\" and \" \"",
-                                "lineNumber": 47,
-                                "arg": null,
-                                "instruction": "instruction"
-                            },
-                            {
-                                "keyword": "Then",
-                                "statement": "I get `[\"a\",\"b\",\"c\"]`",
-                                "lineNumber": 48,
-                                "arg": null
-                            }
-                        ],
-                        "tags": []
-                    },
-                    {
-                        "keyword": "Scenario Outline",
-                        "statement": "breaks string when <delimeter>",
-                        "description": "",
-                        "lineNumber": 50,
-                        "id": 4,
-                        "expanded": [
-                            {
-                                "keyword": "Scenario Outline",
-                                "statement": "breaks string when \\|",
-                                "description": "",
-                                "lineNumber": 50,
-                                "id": 4,
-                                "steps": [
-                                    {
-                                        "keyword": "When",
-                                        "statement": "I pass \"a\\|b\\|c\" and \"\\|\"",
-                                        "lineNumber": 51,
-                                        "arg": null
-                                    },
-                                    {
-                                        "keyword": "Then",
-                                        "statement": "I get `[\"a\",\"b\",\"c\"]`",
-                                        "lineNumber": 52,
-                                        "arg": null
-                                    },
-                                    {
-                                        "keyword": "And",
-                                        "statement": "for data table",
-                                        "lineNumber": 53,
-                                        "arg": {
-                                            "content": [
-                                                [ "a\\|b\\|c", "\\|" ],
-                                                [ "a\\|b\\|c", "\\|" ]
-                                            ],
-                                            "type": "DataTable",
-                                            "instruction": "instruction 2",
-                                            "lineNumber" : 55
-                                        }
-                                    },
-                                    {
-                                        "keyword": "And",
-                                        "statement": "in docString",
-                                        "lineNumber": 57,
-                                        "arg": {
-                                            "content": "A string a\\|b\\|c separated by '\\|' will result in ?\nA string a\\|b\\|c separated by '\\|' will result in ?",
-                                            "type": "DocString",
-                                            "lineNumber" : 58
-                                        }
-                                    }
-                                ],
-                                "tags": [],
-                                "examplesLineNumber": [
-                                    65
-                                ]
-                            },
-                            {
-                                "keyword": "Scenario Outline",
-                                "statement": "breaks string when ",
-                                "description": "",
-                                "lineNumber": 50,
-                                "id": 4,
-                                "steps": [
-                                    {
-                                        "keyword": "When",
-                                        "statement": "I pass \"abc\" and \"\"",
-                                        "lineNumber": 51,
-                                        "arg": null
-                                    },
-                                    {
-                                        "keyword": "Then",
-                                        "statement": "I get `[\"a\",\"b\",\"c\"]`",
-                                        "lineNumber": 52,
-                                        "arg": null
-                                    },
-                                    {
-                                        "keyword": "And",
-                                        "statement": "for data table",
-                                        "lineNumber": 53,
-                                        "arg": {
-                                            "content": [
-                                                [ "abc", "" ],
-                                                [ "abc", "" ]
-                                            ],
-                                            "type": "DataTable",
-                                            "instruction": "instruction 2",
-                                            "lineNumber" : 55
-                                        }
-                                    },
-                                    {
-                                        "keyword": "And",
-                                        "statement": "in docString",
-                                        "lineNumber": 57,
-                                        "arg": {
-                                            "content": "A string abc separated by '' will result in ?\nA string abc separated by '' will result in ?",
-                                            "type": "DocString",
-                                            "lineNumber" : 58
-                                        }
-                                    }
-                                ],
-                                "tags": [],
-                                "examplesLineNumber": [
-                                    66
-                                ]
-                            }
-                        ],
-                        "tags": [],
-                        "examples": [
-                            {
-                                "lineNumber": 63,
-                                "rows":[
-                                    {
-                                        "lineNumber": 64,
-                                        "regex": [
-                                            {},
-                                            {}
-                                        ],
-                                        "cells": [
-                                            "string",
-                                            "delimeter"
-                                        ]
-                                    },
-                                    {
-                                        "lineNumber": 65,
-                                        "cells": [
-                                            "a\\|b\\|c",
-                                            "\\|"
-                                        ]
-                                    },
-                                    {
-                                        "lineNumber": 66,
-                                        "cells": [
-                                            "abc",
-                                            ""
-                                        ]
-                                    }
-                                ],
-                                "tags": []
-                            }
-                        ]
+                        "keyword": "Given",
+                        "statement": "a string tokenizer",
+                        "lineNumber": 17,
+                        "arg": null
                     }
                 ]
             }
-        ]
-    }
+        },
+        {
+            "keyword": "Rule",
+            "statement": "some rule 2",
+            "description": "with description",
+            "lineNumber": 40,
+            "scenarios": [
+                {
+                    "keyword": "Scenario",
+                    "statement": "breaks string for \" \"",
+                    "description": "description for scenario",
+                    "lineNumber": 44,
+                    "id": 3,
+                    "steps": [
+                        {
+                            "keyword": "When",
+                            "statement": "I pass \"a b c\" and \" \"",
+                            "lineNumber": 47,
+                            "arg": null,
+                            "instruction": "instruction"
+                        },
+                        {
+                            "keyword": "Then",
+                            "statement": "I get `[\"a\",\"b\",\"c\"]`",
+                            "lineNumber": 48,
+                            "arg": null
+                        }
+                    ],
+                    "tags": []
+                },
+                {
+                    "keyword": "Scenario Outline",
+                    "statement": "breaks string when <delimeter>",
+                    "description": "",
+                    "lineNumber": 50,
+                    "id": 4,
+                    "expanded": [
+                        {
+                            "keyword": "Scenario Outline",
+                            "statement": "breaks string when \\|",
+                            "description": "",
+                            "lineNumber": 50,
+                            "id": 4,
+                            "steps": [
+                                {
+                                    "keyword": "When",
+                                    "statement": "I pass \"a\\|b\\|c\" and \"\\|\"",
+                                    "lineNumber": 51,
+                                    "arg": null
+                                },
+                                {
+                                    "keyword": "Then",
+                                    "statement": "I get `[\"a\",\"b\",\"c\"]`",
+                                    "lineNumber": 52,
+                                    "arg": null
+                                },
+                                {
+                                    "keyword": "And",
+                                    "statement": "for data table",
+                                    "lineNumber": 53,
+                                    "arg": {
+                                        "content": [
+                                            [ "a\\|b\\|c", "\\|" ],
+                                            [ "a\\|b\\|c", "\\|" ]
+                                        ],
+                                        "type": "DataTable",
+                                        "instruction": "instruction 2",
+                                        "lineNumber" : 55
+                                    }
+                                },
+                                {
+                                    "keyword": "And",
+                                    "statement": "in docString",
+                                    "lineNumber": 57,
+                                    "arg": {
+                                        "content": "A string a\\|b\\|c separated by '\\|' will result in ?\nA string a\\|b\\|c separated by '\\|' will result in ?",
+                                        "type": "DocString",
+                                        "lineNumber" : 58
+                                    }
+                                }
+                            ],
+                            "tags": [],
+                            "examplesLineNumber": [
+                                65
+                            ]
+                        },
+                        {
+                            "keyword": "Scenario Outline",
+                            "statement": "breaks string when ",
+                            "description": "",
+                            "lineNumber": 50,
+                            "id": 4,
+                            "steps": [
+                                {
+                                    "keyword": "When",
+                                    "statement": "I pass \"abc\" and \"\"",
+                                    "lineNumber": 51,
+                                    "arg": null
+                                },
+                                {
+                                    "keyword": "Then",
+                                    "statement": "I get `[\"a\",\"b\",\"c\"]`",
+                                    "lineNumber": 52,
+                                    "arg": null
+                                },
+                                {
+                                    "keyword": "And",
+                                    "statement": "for data table",
+                                    "lineNumber": 53,
+                                    "arg": {
+                                        "content": [
+                                            [ "abc", "" ],
+                                            [ "abc", "" ]
+                                        ],
+                                        "type": "DataTable",
+                                        "instruction": "instruction 2",
+                                        "lineNumber" : 55
+                                    }
+                                },
+                                {
+                                    "keyword": "And",
+                                    "statement": "in docString",
+                                    "lineNumber": 57,
+                                    "arg": {
+                                        "content": "A string abc separated by '' will result in ?\nA string abc separated by '' will result in ?",
+                                        "type": "DocString",
+                                        "lineNumber" : 58
+                                    }
+                                }
+                            ],
+                            "tags": [],
+                            "examplesLineNumber": [
+                                66
+                            ]
+                        }
+                    ],
+                    "tags": [],
+                    "examples": [
+                        {
+                            "lineNumber": 63,
+                            "rows":[
+                                {
+                                    "lineNumber": 64,
+                                    "regex": [
+                                        {},
+                                        {}
+                                    ],
+                                    "cells": [
+                                        "string",
+                                        "delimeter"
+                                    ]
+                                },
+                                {
+                                    "lineNumber": 65,
+                                    "cells": [
+                                        "a\\|b\\|c",
+                                        "\\|"
+                                    ]
+                                },
+                                {
+                                    "lineNumber": 66,
+                                    "cells": [
+                                        "abc",
+                                        ""
+                                    ]
+                                }
+                            ],
+                            "tags": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
 }
