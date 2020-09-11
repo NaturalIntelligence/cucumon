@@ -15,6 +15,20 @@
                     "description": "",
                     "lineNumber": 4,
                     "id": 1,
+                    "steps": [
+                        {
+                            "keyword": "Given",
+                            "statement": "an example",
+                            "lineNumber": 5,
+                            "arg": null
+                        },
+                        {
+                            "keyword": "And",
+                            "statement": "I can pass \"<data>\" with spceial characters",
+                            "lineNumber": 6,
+                            "arg": null
+                        }
+                    ],
                     "expanded": [
                         {
                             "keyword": "Scenario Template",

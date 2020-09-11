@@ -218,6 +218,7 @@ class FeatureParser{
             if(!scenarios){
                 scenarios = defaultExpander(template, examples);
             }
+            scenarioOutline.steps = template.steps;
             scenarioOutline.expanded = scenarios;
             
         }else if(this.lineNumber === this.lines.length){

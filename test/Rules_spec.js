@@ -91,6 +91,21 @@ describe("Rule", function () {
                     "lineNumber": 5,
                     "id": 1,
                     "tags": [ "@one" ],
+                    "steps": [
+                        {
+                            "keyword": "When",
+                            "statement": "I pass \"a b c\" and \" \"",
+                            "lineNumber": 6,
+                            "arg": null
+                        },
+                        {
+                            "keyword": "Then",
+                            "statement": "I get [\"a\",\"b\",\"c\"]",
+                            "lineNumber": 9,
+                            "instruction": "instructions are not ignored",
+                            "arg": null
+                        }
+                    ],
                     "expanded": [
                         {
                             "keyword": "Scenario Outline",
