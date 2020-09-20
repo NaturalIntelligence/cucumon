@@ -5,8 +5,8 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Current Opened File",
-            "program": "${file}"
-            //"runtimeExecutable": "/home/cts1/.nvm/versions/node/v11.15.0/bin/node"
+            "program": "${file}",
+            "runtimeExecutable": "~/.nvm/versions/node/v11.15.0/bin/node"
         },
         {
             "type": "node",
@@ -33,7 +33,9 @@
             "args": [
                 "${file}"
             ],
-            "internalConsoleOptions": "openOnSessionStart"
+            "internalConsoleOptions": "openOnSessionStart",
+            "runtimeExecutable": "npm"
+            //"runtimeExecutable": "~/.nvm/versions/node/v12.16.2/bin/node"
         }
     ]
    
