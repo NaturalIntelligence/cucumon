@@ -124,6 +124,7 @@ describe("Rule", function () {
                                     "keyword": "Then",
                                     "statement": "I get [\"a\",\"b\",\"c\"]",
                                     "lineNumber": 9,
+                                    "instruction": "instructions are not ignored",
                                     "arg": null
                                 }
                             ],

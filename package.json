@@ -1,6 +1,6 @@
 {
   "name": "cucumon",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Cucumber Gherkin Feature file parser with custom additional features",
   "main": "src/FeatureFileParser.js",
   "scripts": {
@@ -21,7 +21,7 @@
   "license": "MIT",
   "devDependencies": {
     "istanbul": "^0.4.5",
-    "jasmine": "^3.6.1"
+    "jasmine": "^3.8.0"
   },
   "funding": {
     "type": "paypal",

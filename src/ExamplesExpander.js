@@ -14,7 +14,8 @@ module.exports = function(template, examples){
                     , resolveWithExample(template.steps[j].statement, examplesTable[0], examplesTable[i])
                     , template.steps[j].lineNumber
                     , template.steps[j].scenarioId);
-                
+                step.instruction = template.steps[j].instruction;
+
                 const arg = template.steps[j].arg;
                 if(arg){
                     step.arg = {
