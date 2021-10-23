@@ -1,11 +1,11 @@
 {
   "name": "cucumon",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Cucumber Gherkin Feature file parser with custom additional features",
   "main": "src/FeatureFileParser.js",
   "scripts": {
-    "test": "jasmine test/*spec.js",
-    "coverage": "istanbul cover -x \"cli.js\" -x \"test/*spec.js\" jasmine test/*spec.js;"
+    "test": "npx nyc jasmine test/*spec.js",
+    "coverage": "npx nyc report --reporter html --reporter text -t .nyc_output --report-dir .nyc_output/summary"
   },
   "repository": {
     "type": "git",
@@ -15,16 +15,19 @@
     "cucumber",
     "gherkin",
     "feature",
-    "parser"
+    "parser",
+    "advance"
   ],
   "author": "Amit Kumar Gupta (https://amitkumargupta.work/)",
   "license": "MIT",
   "devDependencies": {
-    "istanbul": "^0.4.5",
     "jasmine": "^3.8.0"
   },
   "funding": {
     "type": "paypal",
     "url": "https://paypal.me/naturalintelligence"
+  },
+  "dependencies": {
+    "nyc": "^15.1.0"
   }
 }
