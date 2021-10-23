@@ -25,7 +25,7 @@ describe("Feature Sample 1", function () {
         const actual = JSON.parse(JSON.stringify(result));
         const expected = require( "./FeatureSample1_clubbedBgSteps.json" );
         expect(expected).toEqual(actual);
-        //console.log(JSON.stringify(result,null,4));
+        // console.log(JSON.stringify(result,null,4));
     });
 
 });

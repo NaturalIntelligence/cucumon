@@ -38,7 +38,7 @@ module.exports = function(template, examples){
                 steps[j] = step;
             }
             //create new scenario
-            const scenario = new Scenario(template.id, template.keyword, scenarioStatement, template.lineNumber);
+            const scenario = new Scenario(template.id, template.keyword, scenarioStatement, template.instruction, template.lineNumber);
             scenario.description = template.description;
             scenario.steps = steps;
             scenario.tags = template.tags;

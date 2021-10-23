@@ -19,20 +19,6 @@
                     "description": "This is the desription\nfor scenario outline",
                     "lineNumber": 20,
                     "id": 1,
-                    "steps": [
-                        {
-                            "keyword": "When",
-                            "statement": "I pass \"<string>\" and delimeter: \"<delimeter>\"",
-                            "lineNumber": 23,
-                            "arg": null
-                        },
-                        {
-                            "keyword": "Then",
-                            "statement": "I get `[\"a\",\"b\",\"c\"]`",
-                            "lineNumber": 24,
-                            "arg": null
-                        }
-                    ],
                     "expanded": [
                         {
                             "keyword": "Scenario Outline",
@@ -95,7 +81,7 @@
                     "examples": [
                         {
                             "lineNumber": 26,
-                            "rows":[
+                            "rows": [
                                 {
                                     "lineNumber": 27,
                                     "regex": [
@@ -123,6 +109,20 @@
                                 }
                             ],
                             "tags": []
+                        }
+                    ],
+                    "steps": [
+                        {
+                            "keyword": "When",
+                            "statement": "I pass \"<string>\" and delimeter: \"<delimeter>\"",
+                            "lineNumber": 23,
+                            "arg": null
+                        },
+                        {
+                            "keyword": "Then",
+                            "statement": "I get `[\"a\",\"b\",\"c\"]`",
+                            "lineNumber": 24,
+                            "arg": null
                         }
                     ]
                 },
@@ -178,176 +178,153 @@
                     "keyword": "Scenario",
                     "statement": "breaks string for \" \"",
                     "description": "description for scenario",
-                    "lineNumber": 44,
+                    "lineNumber": 46,
                     "id": 3,
                     "steps": [
                         {
                             "keyword": "When",
                             "statement": "I pass \"a b c\" and \" \"",
-                            "lineNumber": 47,
+                            "lineNumber": 49,
                             "arg": null,
                             "instruction": "instruction"
                         },
                         {
                             "keyword": "Then",
                             "statement": "I get `[\"a\",\"b\",\"c\"]`",
-                            "lineNumber": 48,
+                            "lineNumber": 50,
                             "arg": null
                         }
                     ],
-                    "tags": []
+                    "tags": [],
+                    "instruction": "instruction before Scenario"
                 },
                 {
                     "keyword": "Scenario Outline",
                     "statement": "breaks string when <delimeter>",
                     "description": "",
-                    "lineNumber": 50,
+                    "lineNumber": 54,
                     "id": 4,
-                    "steps": [
-                        {
-                            "keyword": "When",
-                            "statement": "I pass \"<string>\" and \"<delimeter>\"",
-                            "lineNumber": 51,
-                            "arg": null
-                        },
-                        {
-                            "keyword": "Then",
-                            "statement": "I get `[\"a\",\"b\",\"c\"]`",
-                            "lineNumber": 52,
-                            "arg": null
-                        },
-                        {
-                            "keyword": "And",
-                            "statement": "for data table",
-                            "lineNumber": 53,
-                            "arg": {
-                                "content": [
-                                    [ "<string>", "<delimeter>" ],
-                                    [ "<string>", "<delimeter>" ]
-                                ],
-                                "type": "DataTable",
-                                "instruction": "instruction 2",
-                                "lineNumber" : 55
-                            }
-                        },
-                        {
-                            "keyword": "And",
-                            "statement": "in docString",
-                            "lineNumber": 57,
-                            "arg": {
-                                "content": "A string <string> separated by '<delimeter>' will result in ?\nA string <string> separated by '<delimeter>' will result in ?",
-                                "type": "DocString",
-                                "lineNumber" : 58
-                            }
-                        }
-                    ],
                     "expanded": [
                         {
                             "keyword": "Scenario Outline",
                             "statement": "breaks string when \\|",
                             "description": "",
-                            "lineNumber": 50,
+                            "lineNumber": 54,
                             "id": 4,
                             "steps": [
                                 {
                                     "keyword": "When",
                                     "statement": "I pass \"a\\|b\\|c\" and \"\\|\"",
-                                    "lineNumber": 51,
+                                    "lineNumber": 55,
                                     "arg": null
                                 },
                                 {
                                     "keyword": "Then",
                                     "statement": "I get `[\"a\",\"b\",\"c\"]`",
-                                    "lineNumber": 52,
+                                    "lineNumber": 56,
                                     "arg": null
                                 },
                                 {
                                     "keyword": "And",
                                     "statement": "for data table",
-                                    "lineNumber": 53,
+                                    "lineNumber": 57,
                                     "arg": {
-                                        "content": [
-                                            [ "a\\|b\\|c", "\\|" ],
-                                            [ "a\\|b\\|c", "\\|" ]
-                                        ],
                                         "type": "DataTable",
-                                        "instruction": "instruction 2",
-                                        "lineNumber" : 55
+                                        "lineNumber": 59,
+                                        "content": [
+                                            [
+                                                "a\\|b\\|c",
+                                                "\\|"
+                                            ],
+                                            [
+                                                "a\\|b\\|c",
+                                                "\\|"
+                                            ]
+                                        ],
+                                        "instruction": "instruction 2"
                                     }
                                 },
                                 {
                                     "keyword": "And",
                                     "statement": "in docString",
-                                    "lineNumber": 57,
+                                    "lineNumber": 61,
                                     "arg": {
-                                        "content": "A string a\\|b\\|c separated by '\\|' will result in ?\nA string a\\|b\\|c separated by '\\|' will result in ?",
                                         "type": "DocString",
-                                        "lineNumber" : 58
+                                        "lineNumber": 62,
+                                        "content": "A string a\\|b\\|c separated by '\\|' will result in ?\nA string a\\|b\\|c separated by '\\|' will result in ?"
                                     }
                                 }
                             ],
                             "tags": [],
+                            "instruction": "instruction before Scenario Outline",
                             "examplesLineNumber": [
-                                65
+                                69
                             ]
                         },
                         {
                             "keyword": "Scenario Outline",
                             "statement": "breaks string when ",
                             "description": "",
-                            "lineNumber": 50,
+                            "lineNumber": 54,
                             "id": 4,
                             "steps": [
                                 {
                                     "keyword": "When",
                                     "statement": "I pass \"abc\" and \"\"",
-                                    "lineNumber": 51,
+                                    "lineNumber": 55,
                                     "arg": null
                                 },
                                 {
                                     "keyword": "Then",
                                     "statement": "I get `[\"a\",\"b\",\"c\"]`",
-                                    "lineNumber": 52,
+                                    "lineNumber": 56,
                                     "arg": null
                                 },
                                 {
                                     "keyword": "And",
                                     "statement": "for data table",
-                                    "lineNumber": 53,
+                                    "lineNumber": 57,
                                     "arg": {
-                                        "content": [
-                                            [ "abc", "" ],
-                                            [ "abc", "" ]
-                                        ],
                                         "type": "DataTable",
-                                        "instruction": "instruction 2",
-                                        "lineNumber" : 55
+                                        "lineNumber": 59,
+                                        "content": [
+                                            [
+                                                "abc",
+                                                ""
+                                            ],
+                                            [
+                                                "abc",
+                                                ""
+                                            ]
+                                        ],
+                                        "instruction": "instruction 2"
                                     }
                                 },
                                 {
                                     "keyword": "And",
                                     "statement": "in docString",
-                                    "lineNumber": 57,
+                                    "lineNumber": 61,
                                     "arg": {
-                                        "content": "A string abc separated by '' will result in ?\nA string abc separated by '' will result in ?",
                                         "type": "DocString",
-                                        "lineNumber" : 58
+                                        "lineNumber": 62,
+                                        "content": "A string abc separated by '' will result in ?\nA string abc separated by '' will result in ?"
                                     }
                                 }
                             ],
                             "tags": [],
+                            "instruction": "instruction before Scenario Outline",
                             "examplesLineNumber": [
-                                66
+                                70
                             ]
                         }
                     ],
                     "tags": [],
                     "examples": [
                         {
-                            "lineNumber": 63,
-                            "rows":[
+                            "lineNumber": 67,
+                            "rows": [
                                 {
-                                    "lineNumber": 64,
+                                    "lineNumber": 68,
                                     "regex": [
                                         {},
                                         {}
@@ -358,14 +335,14 @@
                                     ]
                                 },
                                 {
-                                    "lineNumber": 65,
+                                    "lineNumber": 69,
                                     "cells": [
                                         "a\\|b\\|c",
                                         "\\|"
                                     ]
                                 },
                                 {
-                                    "lineNumber": 66,
+                                    "lineNumber": 70,
                                     "cells": [
                                         "abc",
                                         ""
@@ -373,6 +350,51 @@
                                 }
                             ],
                             "tags": []
+                        }
+                    ],
+                    "instruction": "instruction before Scenario Outline",
+                    "steps": [
+                        {
+                            "keyword": "When",
+                            "statement": "I pass \"<string>\" and \"<delimeter>\"",
+                            "lineNumber": 55,
+                            "arg": null
+                        },
+                        {
+                            "keyword": "Then",
+                            "statement": "I get `[\"a\",\"b\",\"c\"]`",
+                            "lineNumber": 56,
+                            "arg": null
+                        },
+                        {
+                            "keyword": "And",
+                            "statement": "for data table",
+                            "lineNumber": 57,
+                            "arg": {
+                                "content": [
+                                    [
+                                        "<string>",
+                                        "<delimeter>"
+                                    ],
+                                    [
+                                        "<string>",
+                                        "<delimeter>"
+                                    ]
+                                ],
+                                "lineNumber": 59,
+                                "type": "DataTable",
+                                "instruction": "instruction 2"
+                            }
+                        },
+                        {
+                            "keyword": "And",
+                            "statement": "in docString",
+                            "lineNumber": 61,
+                            "arg": {
+                                "content": "A string <string> separated by '<delimeter>' will result in ?\nA string <string> separated by '<delimeter>' will result in ?",
+                                "lineNumber": 62,
+                                "type": "DocString"
+                            }
                         }
                     ]
                 }

@@ -133,7 +133,8 @@ class FeatureParser{
         this.section = {};
         for(;this.lineNumber < this.lines.length; this.lineNumber++){
             let line = this.lines[this.lineNumber].trim();
-            if( line.length === 0 || line[0] === '#' ) continue;
+            if( line.length === 0  ) continue; //ignore empty lines
+            else if( line[0] === '#' ) continue; //ignore comments
             else if( line[0] === '@'){
                 this.tags = this.tags.concat(this.breakIntoTags(line));
             }else{
@@ -177,7 +178,8 @@ class FeatureParser{
         let description = [];
         for(;this.lineNumber < this.lines.length; this.lineNumber++){
             let line = this.lines[this.lineNumber].trim();
-            if(line[0] === '#') continue;
+            if( line[0] === '#' && line[1] === '>' ) this.instruction = line.substr(2).trim(); 
+            else if(line[0] === '#') continue;
             else if( this.startingOfAnySection(line)) break;
             else description.push(line);
         }
@@ -194,7 +196,7 @@ class FeatureParser{
         }else if(section === "Scenario Outline" || section === "Scenario Template"){
             const template = this.readScenario();
 
-            const scenarioOutline = new ScenarioOutline(template.id, template.keyword, template.statement, template.lineNumber);
+            const scenarioOutline = new ScenarioOutline(template.id, template.keyword, template.statement, template.instruction,  template.lineNumber);
             scenarioOutline.description = template.description;
             scenarioOutline.tags = template.tags;
             this.currentRule().scenarios.push(scenarioOutline);
@@ -230,9 +232,9 @@ class FeatureParser{
 
     readScenario(){
         this.readDescriptionForScenario();
-        const scenario = new Scenario(this.scenarioCount++, this.section.keyword, this.section.statement, this.section.lineNumber+1);
+        const scenario = new Scenario(this.scenarioCount++, this.section.keyword, this.section.statement, this.instruction, this.section.lineNumber+1);
         scenario.description = this.section.description;
-
+        this.instruction = null;
         let steps=[];
         const rule = this.currentRule();
         if(rule.hasBgSection && this.options.clubBgSteps){

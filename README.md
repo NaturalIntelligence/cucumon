@@ -75,7 +75,7 @@ Rule: Other sub feature
         |val|
 ```
 
-Note the **instruction statment** `#> {}`. Instruction statments are special comments which can help parser to take some extra steps. Currently, they are supported with steps, docstring, and data table inputs.
+Note the **instruction statment** `#> {}`. Instruction statments are special comments which can help parser to take some extra steps. Currently, they are supported with scenario, steps, docstring, and data table inputs.
 
 ### Result format
 

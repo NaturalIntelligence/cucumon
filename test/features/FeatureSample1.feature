@@ -41,12 +41,16 @@ Rule: some rule 2
 #> comment
 with description
 
+    #> instruction ignored
+    #> instruction before Scenario
     Scenario: breaks string for " "
         description for scenario
         #> instruction
         When I pass "a b c" and " "
         Then I get `["a","b","c"]`
 
+    #> instruction ignored 2
+    #> instruction before Scenario Outline
     Scenario Outline: breaks string when <delimeter>
         When I pass "<string>" and "<delimeter>"
         Then I get `["a","b","c"]`
